@@ -52,8 +52,8 @@ logs/
 .env
 .env.local
 
-# Google credentials
-service_account.json
+# API credentials (if any)
+*.json.key
 
 # OS
 Thumbs.db

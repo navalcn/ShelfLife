@@ -2,7 +2,7 @@
 
 A comprehensive **AI-powered food inventory management system** with smart expiry tracking, recipe suggestions, waste analytics, and intelligent meal planning.
 
-Built with **Flask**, **SQLite**, **Google Vision API**, and **Machine Learning**.
+Built with **Flask**, **SQLite**, **Donut OCR**, **EasyOCR**, and **Machine Learning**.
 
 ---
 
@@ -11,9 +11,9 @@ Built with **Flask**, **SQLite**, **Google Vision API**, and **Machine Learning*
 ### 📸 **Bill Scanning & OCR**
 - Upload grocery bill images
 - Multi-model OCR: Donut (primary) + EasyOCR (fallback) for accurate item extraction
-- Google Vision API integration with graceful fallback
 - Automatic item categorization and unit prediction
 - Enhanced OCR pipeline with ensemble scoring
+- No external API dependencies - works completely offline
 
 ### 🥗 **Smart Recipe Engine**
 - AI-powered recipe suggestions based on available ingredients
@@ -78,18 +78,12 @@ source .venv312/bin/activate  # On macOS/Linux
 pip install -r requirements.txt
 ```
 
-4. **(Optional) Set Google Vision API credentials:**
-```bash
-set GOOGLE_APPLICATION_CREDENTIALS=path\to\service_account.json  # Windows
-export GOOGLE_APPLICATION_CREDENTIALS=path/to/service_account.json  # macOS/Linux
-```
-
-5. **Run the application:**
+4. **Run the application:**
 ```bash
 python app.py
 ```
 
-6. **Open in browser:**
+5. **Open in browser:**
 ```
 http://localhost:5000
 ```
@@ -113,7 +107,7 @@ ShelfLife/
 │   ├── item_categorizer.py     # Smart item categorization
 │   ├── analytics.py            # Waste & consumption analytics
 │   ├── expiry_utils.py         # Expiry date calculations
-│   ├── vision_utils.py         # Google Vision API integration
+│   ├── vision_utils.py         # OCR utilities (Donut + EasyOCR)
 │   ├── enhanced_ocr.py         # Enhanced OCR pipeline with ensemble scoring
 │   ├── alias_resolver.py       # Item name normalization
 │   ├── consumption_policies.py # Single-use item detection
@@ -163,7 +157,7 @@ ShelfLife/
 
 - **Backend**: Flask, SQLAlchemy, SQLite
 - **Frontend**: HTML5, TailwindCSS, JavaScript, Flatpickr, Lucide Icons
-- **ML/AI**: Google Vision API, Donut OCR, EasyOCR, RapidFuzz, Transformers, PyTorch
+- **ML/AI**: Donut OCR, EasyOCR, RapidFuzz, Transformers, PyTorch
 - **Data**: JSON, Event logging, Analytics engine
 - **Deployment**: Python 3.10+
 
@@ -175,7 +169,7 @@ ShelfLife/
 1. Go to home page (redirects to dashboard)
 2. Click "Upload Bill" or go to `/upload_bill`
 3. Select receipt image
-4. System extracts items using Donut OCR (fallback to EasyOCR)
+4. System extracts items using Donut OCR (with EasyOCR fallback)
 5. Review extracted items on confirmation page
 6. Confirm to add to inventory
 
@@ -251,11 +245,12 @@ The system uses `utils/item_categorizer.py` with 12 categories and 200+ keywords
 
 ## 📝 Notes
 
-- If Google Vision API is not configured, OCR will gracefully skip
+- OCR works completely offline using Donut and EasyOCR
 - You can manually add/update items on the dashboard
 - Default shelf life values are in `expiry_data.json`
 - Consumption data is stored locally in SQLite
 - All calculations are done server-side for privacy
+- No external API dependencies required
 
 ---
 
