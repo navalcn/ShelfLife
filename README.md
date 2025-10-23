@@ -262,7 +262,7 @@ MIT License - Feel free to use this project for personal or commercial purposes.
 
 ## 👨‍💻 Author
 
-**Naval Choudhary**
+**Naval**
 - GitHub: [@navalcn](https://github.com/navalcn)
 - Email: navalcn4002@gmail.com
 
