@@ -10,9 +10,10 @@ Built with **Flask**, **SQLite**, **Google Vision API**, and **Machine Learning*
 
 ### 📸 **Bill Scanning & OCR**
 - Upload grocery bill images
-- Multi-model OCR (Donut + EasyOCR) for accurate item extraction
+- Multi-model OCR: Donut (primary) + EasyOCR (fallback) for accurate item extraction
+- Google Vision API integration with graceful fallback
 - Automatic item categorization and unit prediction
-- Graceful fallback if Vision API unavailable
+- Enhanced OCR pipeline with ensemble scoring
 
 ### 🥗 **Smart Recipe Engine**
 - AI-powered recipe suggestions based on available ingredients
@@ -103,7 +104,7 @@ ShelfLife/
 ├── models.py                   # SQLAlchemy database models
 ├── database.py                 # Database initialization
 ├── requirements.txt            # Python dependencies
-├── recipes.json                # Recipe database (50+ recipes)
+├── recipes.json                # Recipe database (30+ recipes)
 ├── expiry_data.json            # Default expiry times
 ├── consumption_priors.json     # Consumption patterns
 │
@@ -113,7 +114,7 @@ ShelfLife/
 │   ├── analytics.py            # Waste & consumption analytics
 │   ├── expiry_utils.py         # Expiry date calculations
 │   ├── vision_utils.py         # Google Vision API integration
-│   ├── enhanced_ocr.py         # Multi-model OCR (Donut + EasyOCR)
+│   ├── enhanced_ocr.py         # Enhanced OCR pipeline with ensemble scoring
 │   ├── alias_resolver.py       # Item name normalization
 │   ├── consumption_policies.py # Single-use item detection
 │   ├── event_log.py            # Usage event tracking
@@ -134,8 +135,8 @@ ShelfLife/
 │   └── [more templates]
 │
 ├── static/                     # Static files
-│   ├── css/style.css           # Styling
-│   └── js/script.js            # Frontend logic
+│   ├── css/style.css           # Custom CSS (minimal - uses TailwindCSS)
+│   └── js/script.js            # Toast notifications & date picker
 │
 └── uploads/                    # Temporary files & data
 ```
@@ -161,8 +162,8 @@ ShelfLife/
 ## 🎯 Key Technologies
 
 - **Backend**: Flask, SQLAlchemy, SQLite
-- **Frontend**: HTML5, CSS3, JavaScript, Chart.js
-- **ML/AI**: Google Vision API, Donut OCR, EasyOCR, RapidFuzz
+- **Frontend**: HTML5, TailwindCSS, JavaScript, Flatpickr, Lucide Icons
+- **ML/AI**: Google Vision API, Donut OCR, EasyOCR, RapidFuzz, Transformers, PyTorch
 - **Data**: JSON, Event logging, Analytics engine
 - **Deployment**: Python 3.10+
 
@@ -171,45 +172,65 @@ ShelfLife/
 ## 📊 Usage Examples
 
 ### Add Items from Bill
-1. Go to Dashboard
-2. Click "Upload Bill"
+1. Go to home page (redirects to dashboard)
+2. Click "Upload Bill" or go to `/upload_bill`
 3. Select receipt image
-4. System extracts items automatically
-5. Review and confirm
+4. System extracts items using Donut OCR (fallback to EasyOCR)
+5. Review extracted items on confirmation page
+6. Confirm to add to inventory
 
 ### Get Recipe Suggestions
-1. Go to Dashboard
-2. View "Suggested Recipes" section
+1. Go to Dashboard (`/dashboard`)
+2. View "Suggested Recipes" section (auto-generated)
 3. Recipes ranked by:
-   - Ingredient availability
-   - Expiring items priority
-   - User preferences
-4. Click recipe to cook and deduct ingredients
+   - Ingredient availability and coverage
+   - Expiring items priority (bonus scoring)
+   - Confidence matching and category awareness
+4. Click "Cook Recipe" to deduct ingredients automatically
 
 ### Track Consumption
-1. Go to "Daily Usage"
-2. Log items consumed
-3. System learns consumption patterns
-4. Improves predictions over time
+1. Go to "Daily Usage" (`/daily-usage`)
+2. Log items consumed with quantities
+3. System tracks usage patterns via event logging
+4. Rolling CPD (Consumption Per Day) calculation
+5. Improves finish date predictions over time
 
 ### View Analytics
-1. Go to Dashboard
-2. Check "Waste Trends" and "Insights"
-3. See consumption patterns
-4. Get personalized recommendations
+1. Dashboard shows real-time analytics
+2. Waste trends analysis (30-day window)
+3. Freshness scoring and inventory health
+4. Personalized insights and recommendations
+5. Consumption pattern recognition
 
 ---
 
 ## 🔧 Configuration
 
 ### Default Expiry Times
-Edit `expiry_data.json` to customize default shelf life for items.
+Edit `expiry_data.json` - contains 11 basic items with shelf life in days.
 
 ### Recipes
-Edit `recipes.json` to add/modify recipes.
+Edit `recipes.json` - contains 30+ Indian recipes with ingredients, quantities, time, difficulty, and tags.
 
 ### Consumption Patterns
-Edit `consumption_priors.json` to adjust consumption estimates.
+Edit `consumption_priors.json` - contains per-person-per-day consumption estimates for 18 common items.
+
+### Advanced Categorization
+The system uses `utils/item_categorizer.py` with 12 categories and 200+ keywords for smart classification.
+
+---
+
+## 🌐 Available Routes
+
+- `/` - Home (redirects to dashboard)
+- `/upload_bill` - Upload and scan grocery bills
+- `/confirm_bill` - Review and confirm extracted items
+- `/dashboard` - Main inventory dashboard with analytics
+- `/survey` - AI-powered consumption survey
+- `/daily-usage` - Daily usage tracking interface
+- `/log-usage` - Log item consumption
+- `/shopping-list` - Smart shopping recommendations
+- `/consume_pack` - Mark items as consumed
 
 ---
 
