@@ -2,6 +2,7 @@
   "milk": 2,
   "tomato": 5,
   "cheese": 10,
+  "paneer": 5,
   "bread": 4,
   "banana": 3,
   "spinach": 3,
@@ -9,5 +10,9 @@
   "chicken": 2,
   "fish": 2,
   "apple": 10,
-  "potato": 20
+  "potato": 20,
+  "onion": 14,
+  "butter": 30,
+  "cream": 7,
+  "ginger": 21
 }

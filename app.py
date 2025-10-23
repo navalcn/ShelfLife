@@ -672,11 +672,6 @@ def create_app():
             top_recipes = recipe_data.get('suggestions', [])[:8]  # Show more recipes
             meal_plan = recipe_data.get('meal_plan', [])
             
-            # Debug: Print recipe data to console
-            print(f"DEBUG: Recipe data generated - {len(top_recipes)} recipes found")
-            for recipe in top_recipes:
-                print(f"  - {recipe.get('title', 'Unknown')} (score: {recipe.get('score', 0)})")
-            
         except Exception as e:
             print(f"ERROR generating recipes: {e}")
             import traceback
@@ -915,6 +910,10 @@ def create_app():
                              category_info=category_info,
                              summary=summary,
                              notifications=notifications)
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return app.send_static_file('favicon.svg')
 
     return app
 

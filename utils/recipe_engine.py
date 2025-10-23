@@ -91,6 +91,48 @@ def _ingredient_match(pname: str, ing_name: str, subs: List[str]) -> Tuple[bool,
     return False, 0.0
 
 
+def _convert_units(quantity: float, from_unit: str, to_unit: str) -> float:
+    """Convert quantity from one unit to another."""
+    if not from_unit or not to_unit or from_unit == to_unit:
+        return quantity
+    
+    # Normalize units
+    from_unit = from_unit.lower().strip()
+    to_unit = to_unit.lower().strip()
+    
+    # Weight conversions
+    weight_conversions = {
+        ('g', 'kg'): 0.001,
+        ('kg', 'g'): 1000,
+        ('gm', 'kg'): 0.001,
+        ('kg', 'gm'): 1000,
+        ('gram', 'kg'): 0.001,
+        ('kg', 'gram'): 1000,
+    }
+    
+    # Volume conversions
+    volume_conversions = {
+        ('ml', 'l'): 0.001,
+        ('l', 'ml'): 1000,
+        ('litre', 'l'): 1.0,
+        ('l', 'litre'): 1.0,
+        ('liter', 'l'): 1.0,
+        ('l', 'liter'): 1.0,
+    }
+    
+    # Check weight conversions
+    conversion_key = (from_unit, to_unit)
+    if conversion_key in weight_conversions:
+        return quantity * weight_conversions[conversion_key]
+    
+    # Check volume conversions
+    if conversion_key in volume_conversions:
+        return quantity * volume_conversions[conversion_key]
+    
+    # If no conversion found, return original quantity
+    return quantity
+
+
 def score_recipes(recipes: List[Dict[str, Any]], pantry: List[PantryItem], today, preferences: Optional[Dict] = None) -> List[Tuple[float, Dict[str, Any], Dict[str, Any]]]:
     """
     Enhanced recipe scoring with confidence, nutrition, and preference weighting.
@@ -123,6 +165,9 @@ def score_recipes(recipes: List[Dict[str, Any]], pantry: List[PantryItem], today
                     best_confidence = confidence
                     available_qty = pantry_item.remaining or 0
                     
+                    # Convert units if needed
+                    converted_qty = _convert_units(available_qty, (pantry_item.unit or '').lower(), required_unit)
+                    
                     # Check expiry status
                     status, days_left = compute_status(pantry_item.expiry, today)
                     is_expiring = status in ['expired', 'soon']
@@ -130,9 +175,9 @@ def score_recipes(recipes: List[Dict[str, Any]], pantry: List[PantryItem], today
                     best_match = {
                         'pantry_item': pantry_item,
                         'confidence': confidence,
-                        'available_qty': available_qty,
+                        'available_qty': converted_qty,
                         'required_qty': required_qty,
-                        'coverage': min(1.0, available_qty / required_qty) if required_qty > 0 else 0.0,
+                        'coverage': min(1.0, converted_qty / required_qty) if required_qty > 0 else 0.0,
                         'is_expiring': is_expiring,
                         'days_left': days_left,
                         'unit_match': required_unit == (pantry_item.unit or '').lower()

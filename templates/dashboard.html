@@ -122,33 +122,67 @@
             </h5>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
               {% for ing in r.ingredients %}
-                {% set ing_available = false %}
-                {% set ing_quantity = 0 %}
-                {% for match in r.ingredient_matches %}
-                  {% if match.ingredient.lower() == ing.name.lower() and match.status == 'matched' %}
-                    {% set ing_available = true %}
-                    {% set ing_quantity = match.match.available_qty %}
-                  {% endif %}
-                {% endfor %}
-                
-                <div class="flex items-center justify-between p-2 rounded-lg {% if ing_available %}bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800{% else %}bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800{% endif %}">
-                  <div class="flex items-center space-x-2">
-                    {% if ing_available %}
-                      <i data-lucide="check" class="w-3 h-3 text-green-600 dark:text-green-400"></i>
-                    {% else %}
-                      <i data-lucide="x" class="w-3 h-3 text-red-600 dark:text-red-400"></i>
+                {# Find matching ingredient data #}
+                {% set match_data = namespace(available=false, quantity=0, coverage=0) %}
+                {% if r.ingredient_matches %}
+                  {% for match in r.ingredient_matches %}
+                    {% if match.ingredient == ing.name and match.status == 'matched' %}
+                      {% set match_data.available = true %}
+                      {% set match_data.quantity = match.match.available_qty %}
+                      {% set match_data.coverage = (match.match.coverage * 100)|round %}
                     {% endif %}
-                    <span class="text-sm font-medium {% if ing_available %}text-green-800 dark:text-green-200{% else %}text-red-800 dark:text-red-200{% endif %}">
-                      {{ ing.name|title }}
-                    </span>
+                  {% endfor %}
+                {% endif %}
+                
+                <div class="flex items-center justify-between p-3 rounded-lg border-2 transition-all duration-200 {% if match_data.available %}{% if match_data.coverage >= 100 %}bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 shadow-emerald-100 dark:shadow-emerald-900/20{% elif match_data.coverage >= 50 %}bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 shadow-yellow-100 dark:shadow-yellow-900/20{% else %}bg-orange-50 dark:bg-orange-900/20 border-orange-300 dark:border-orange-700 shadow-orange-100 dark:shadow-orange-900/20{% endif %}{% else %}bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 shadow-red-100 dark:shadow-red-900/20{% endif %} shadow-sm">
+                  <div class="flex items-center space-x-3">
+                    {% if match_data.available %}
+                      {% if match_data.coverage >= 100 %}
+                        <div class="flex-shrink-0 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                          <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                        </div>
+                      {% elif match_data.coverage >= 50 %}
+                        <div class="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <i data-lucide="alert-triangle" class="w-3 h-3 text-white"></i>
+                        </div>
+                      {% else %}
+                        <div class="flex-shrink-0 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                          <i data-lucide="minus" class="w-3 h-3 text-white"></i>
+                        </div>
+                      {% endif %}
+                    {% else %}
+                      <div class="flex-shrink-0 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                        <i data-lucide="x" class="w-3 h-3 text-white"></i>
+                      </div>
+                    {% endif %}
+                    <div class="flex-1">
+                      <span class="text-sm font-semibold {% if match_data.available %}{% if match_data.coverage >= 100 %}text-emerald-800 dark:text-emerald-200{% elif match_data.coverage >= 50 %}text-yellow-800 dark:text-yellow-200{% else %}text-orange-800 dark:text-orange-200{% endif %}{% else %}text-red-800 dark:text-red-200{% endif %}">
+                        {{ ing.name|title }}
+                      </span>
+                      {% if match_data.available %}
+                        <div class="text-xs {% if match_data.coverage >= 100 %}text-emerald-600 dark:text-emerald-400{% elif match_data.coverage >= 50 %}text-yellow-600 dark:text-yellow-400{% else %}text-orange-600 dark:text-orange-400{% endif %} mt-1">
+                          {% if match_data.coverage >= 100 %}
+                            ✓ Enough available
+                          {% elif match_data.coverage >= 50 %}
+                            ⚠ Partially available ({{ match_data.coverage }}%)
+                          {% else %}
+                            ⚠ Low stock ({{ match_data.coverage }}%)
+                          {% endif %}
+                        </div>
+                      {% else %}
+                        <div class="text-xs text-red-600 dark:text-red-400 mt-1">
+                          ✗ Need to buy
+                        </div>
+                      {% endif %}
+                    </div>
                   </div>
                   <div class="text-right">
-                    <div class="text-sm font-semibold {% if ing_available %}text-green-700 dark:text-green-300{% else %}text-red-700 dark:text-red-300{% endif %}">
+                    <div class="text-sm font-bold {% if match_data.available %}{% if match_data.coverage >= 100 %}text-emerald-700 dark:text-emerald-300{% elif match_data.coverage >= 50 %}text-yellow-700 dark:text-yellow-300{% else %}text-orange-700 dark:text-orange-300{% endif %}{% else %}text-red-700 dark:text-red-300{% endif %}">
                       {{ ing.qty }} {{ ing.unit }}
                     </div>
-                    {% if ing_available and ing_quantity > 0 %}
-                      <div class="text-xs {% if ing_available %}text-green-600 dark:text-green-400{% else %}text-red-600 dark:text-red-400{% endif %}">
-                        Have: {{ "%.1f"|format(ing_quantity) }} {{ ing.unit }}
+                    {% if match_data.available and match_data.quantity > 0 %}
+                      <div class="text-xs {% if match_data.coverage >= 100 %}text-emerald-600 dark:text-emerald-400{% elif match_data.coverage >= 50 %}text-yellow-600 dark:text-yellow-400{% else %}text-orange-600 dark:text-orange-400{% endif %} font-medium">
+                        Have: {{ "%.1f"|format(match_data.quantity) }} {{ ing.unit }}
                       </div>
                     {% endif %}
                   </div>
