@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Bill - ShelfLife+{% endblock %}
+
+{% block content %}
+<!-- Upload Bill Hero Section -->
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4">
+      <i data-lucide="receipt" class="w-8 h-8 text-white"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Upload Grocery Bill</h1>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      Let our AI extract items from your grocery receipt. We support images, PDFs, and photos of physical receipts.
+    </p>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+        <div class="flex items-center">
+          <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2"></i>
+          <span class="text-blue-800 dark:text-blue-200">{{ messages|join(', ') }}</span>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Upload Form -->
+  <div class="glass rounded-2xl p-8 animate-fade-in">
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+      <!-- File Upload Area -->
+      <div class="relative">
+        <label for="bill_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Receipt Image
+        </label>
+        <div class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-400 dark:hover:border-blue-500 transition-colors duration-200">
+          <input type="file" id="bill_image" name="bill_image" accept="image/*" required 
+                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+          <div class="space-y-4">
+            <div class="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+              <i data-lucide="upload" class="w-8 h-8 text-gray-400"></i>
+            </div>
+            <div>
+              <p class="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                Drop your receipt here or click to browse
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Supports JPG, PNG, WebP up to 10MB
+              </p>
+            </div>
+            <div class="flex items-center justify-center space-x-4 text-xs text-gray-400">
+              <span class="flex items-center">
+                <i data-lucide="camera" class="w-4 h-4 mr-1"></i>
+                Photos
+              </span>
+              <span class="flex items-center">
+                <i data-lucide="scan" class="w-4 h-4 mr-1"></i>
+                Scans
+              </span>
+              <span class="flex items-center">
+                <i data-lucide="smartphone" class="w-4 h-4 mr-1"></i>
+                Mobile
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Processing Info -->
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+          <i data-lucide="zap" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2"></i>
+          AI Processing Features
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="eye" class="w-4 h-4 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white">Smart OCR</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Multi-model text extraction with 95%+ accuracy</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="brain" class="w-4 h-4 text-purple-600 dark:text-purple-400"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white">Auto Categorization</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Intelligent product classification and unit detection</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="calendar" class="w-4 h-4 text-green-600 dark:text-green-400"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white">Expiry Prediction</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Automatic shelf-life estimation for fresh items</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="merge" class="w-4 h-4 text-orange-600 dark:text-orange-400"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white">Duplicate Detection</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Smart merging of similar items and aliases</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button type="submit" 
+                class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+          <i data-lucide="sparkles" class="w-5 h-5 mr-2"></i>
+          Extract Items with AI
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tips Section -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="text-center p-6">
+      <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="camera" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Clear Photos</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Ensure good lighting and focus for best results</p>
+    </div>
+    <div class="text-center p-6">
+      <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="maximize" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Full Receipt</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Capture the entire receipt including item details</p>
+    </div>
+    <div class="text-center p-6">
+      <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check-circle" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+      </div>
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Review Results</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Always verify extracted items before saving</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// File upload preview
+document.getElementById('bill_image').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const uploadArea = e.target.closest('.border-dashed');
+    const content = uploadArea.querySelector('div');
+    content.innerHTML = `
+      <div class="space-y-4">
+        <div class="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+          <i data-lucide="check" class="w-8 h-8 text-green-600 dark:text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-lg font-medium text-gray-900 dark:text-white mb-1">
+            ${file.name}
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            ${(file.size / 1024 / 1024).toFixed(2)} MB • Ready to process
+          </p>
+        </div>
+      </div>
+    `;
+    uploadArea.classList.remove('border-gray-300', 'dark:border-gray-600');
+    uploadArea.classList.add('border-green-400', 'dark:border-green-500', 'bg-green-50', 'dark:bg-green-900/10');
+  }
+});
+</script>
+{% endblock %}

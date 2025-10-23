@@ -1,0 +1,19 @@
+{
+  "rice": {"unit": "kg", "ppd": 0.06},
+  "wheat flour": {"unit": "kg", "ppd": 0.06},
+  "atta": {"unit": "kg", "ppd": 0.06},
+  "maida": {"unit": "kg", "ppd": 0.05},
+  "flour": {"unit": "kg", "ppd": 0.06},
+  "dal": {"unit": "kg", "ppd": 0.03},
+  "lentil": {"unit": "kg", "ppd": 0.03},
+  "milk": {"unit": "l", "ppd": 0.20},
+  "curd": {"unit": "l", "ppd": 0.15},
+  "yogurt": {"unit": "l", "ppd": 0.15},
+  "vegetable": {"unit": "kg", "ppd": 0.12},
+  "leafy": {"unit": "kg", "ppd": 0.12},
+  "spinach": {"unit": "kg", "ppd": 0.12},
+  "greens": {"unit": "kg", "ppd": 0.12},
+  "potato": {"unit": "kg", "ppd": 0.10},
+  "onion": {"unit": "kg", "ppd": 0.10},
+  "carrot": {"unit": "kg", "ppd": 0.10}
+}

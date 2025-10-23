@@ -1,0 +1,734 @@
+[
+  {
+    "title": "Palak Paneer",
+    "ingredients": [
+      {"name": "spinach", "qty": 0.3, "unit": "kg", "sub": ["amaranth", "greens"]},
+      {"name": "paneer", "qty": 0.25, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "healthy"]
+  },
+  {
+    "title": "Veg Fried Rice",
+    "ingredients": [
+      {"name": "rice", "qty": 0.25, "unit": "kg"},
+      {"name": "carrot", "qty": 0.15, "unit": "kg"},
+      {"name": "peas", "qty": 0.1, "unit": "kg", "sub": ["beans"]},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["veg", "asian", "quick"]
+  },
+  {
+    "title": "Tomato Omelette",
+    "ingredients": [
+      {"name": "egg", "qty": 4, "unit": "pcs"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "oil", "qty": 0.01, "unit": "l"}
+    ],
+    "time_min": 15,
+    "difficulty": "easy",
+    "tags": ["eggs", "quick", "breakfast"]
+  },
+  {
+    "title": "Dal Tadka",
+    "ingredients": [
+      {"name": "dal", "qty": 0.2, "unit": "kg", "sub": ["lentil", "moong dal", "toor dal"]},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.15, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "protein", "healthy"]
+  },
+  {
+    "title": "Aloo Gobi",
+    "ingredients": [
+      {"name": "potato", "qty": 0.3, "unit": "kg", "sub": ["aloo"]},
+      {"name": "cauliflower", "qty": 0.3, "unit": "kg", "sub": ["gobi"]},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.1, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "comfort-food"]
+  },
+  {
+    "title": "Chicken Curry",
+    "ingredients": [
+      {"name": "chicken", "qty": 0.5, "unit": "kg"},
+      {"name": "onion", "qty": 0.2, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger", "qty": 0.03, "unit": "kg"},
+      {"name": "garlic", "qty": 0.02, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 45,
+    "difficulty": "medium",
+    "tags": ["non-veg", "north-indian", "protein"]
+  },
+  {
+    "title": "Rajma Masala",
+    "ingredients": [
+      {"name": "rajma", "qty": 0.2, "unit": "kg", "sub": ["kidney beans", "beans"]},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 50,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "protein", "comfort-food"]
+  },
+  {
+    "title": "Vegetable Pulao",
+    "ingredients": [
+      {"name": "rice", "qty": 0.3, "unit": "kg", "sub": ["basmati rice"]},
+      {"name": "carrot", "qty": 0.1, "unit": "kg"},
+      {"name": "peas", "qty": 0.1, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "rice", "one-pot", "aromatic"]
+  },
+  {
+    "title": "Paneer Butter Masala",
+    "ingredients": [
+      {"name": "paneer", "qty": 0.3, "unit": "kg"},
+      {"name": "tomato", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l", "sub": ["milk"]},
+      {"name": "butter", "qty": 0.05, "unit": "kg", "sub": ["ghee"]},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "rich", "restaurant-style"]
+  },
+  {
+    "title": "Chole Bhature",
+    "ingredients": [
+      {"name": "chickpeas", "qty": 0.2, "unit": "kg", "sub": ["chole", "chana"]},
+      {"name": "flour", "qty": 0.2, "unit": "kg", "sub": ["wheat flour", "atta"]},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "oil", "qty": 0.05, "unit": "l"}
+    ],
+    "time_min": 60,
+    "difficulty": "hard",
+    "tags": ["veg", "north-indian", "street-food", "protein"]
+  },
+  {
+    "title": "Masala Dosa",
+    "ingredients": [
+      {"name": "rice", "qty": 0.2, "unit": "kg"},
+      {"name": "dal", "qty": 0.1, "unit": "kg", "sub": ["urad dal"]},
+      {"name": "potato", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 45,
+    "difficulty": "hard",
+    "tags": ["veg", "south-indian", "breakfast", "fermented"]
+  },
+  {
+    "title": "Sambar Rice",
+    "ingredients": [
+      {"name": "rice", "qty": 0.25, "unit": "kg"},
+      {"name": "dal", "qty": 0.15, "unit": "kg", "sub": ["toor dal"]},
+      {"name": "tomato", "qty": 0.15, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "carrot", "qty": 0.1, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["veg", "south-indian", "one-pot", "healthy"]
+  },
+  {
+    "title": "Biryani",
+    "ingredients": [
+      {"name": "rice", "qty": 0.4, "unit": "kg", "sub": ["basmati rice"]},
+      {"name": "chicken", "qty": 0.5, "unit": "kg", "sub": ["mutton", "vegetables"]},
+      {"name": "onion", "qty": 0.2, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.2, "unit": "l", "sub": ["curd"]},
+      {"name": "ginger", "qty": 0.03, "unit": "kg"},
+      {"name": "garlic", "qty": 0.02, "unit": "kg"},
+      {"name": "oil", "qty": 0.05, "unit": "l"}
+    ],
+    "time_min": 90,
+    "difficulty": "hard",
+    "tags": ["non-veg", "rice", "aromatic", "festive", "one-pot"]
+  },
+  {
+    "title": "Upma",
+    "ingredients": [
+      {"name": "semolina", "qty": 0.2, "unit": "kg", "sub": ["rava", "suji"]},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "carrot", "qty": 0.1, "unit": "kg"},
+      {"name": "peas", "qty": 0.05, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 20,
+    "difficulty": "easy",
+    "tags": ["veg", "south-indian", "breakfast", "quick", "healthy"]
+  },
+  {
+    "title": "Poha",
+    "ingredients": [
+      {"name": "poha", "qty": 0.2, "unit": "kg", "sub": ["flattened rice"]},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "potato", "qty": 0.1, "unit": "kg"},
+      {"name": "peas", "qty": 0.05, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 15,
+    "difficulty": "easy",
+    "tags": ["veg", "breakfast", "quick", "light"]
+  },
+  {
+    "title": "Chole Bhature",
+    "ingredients": [
+      {"name": "chickpeas", "qty": 0.2, "unit": "kg", "sub": ["kabuli chana"]},
+      {"name": "flour", "qty": 0.25, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.1, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.15, "unit": "kg"},
+      {"name": "oil", "qty": 0.1, "unit": "l"}
+    ],
+    "time_min": 45,
+    "difficulty": "medium",
+    "tags": ["north-indian", "lunch", "high-protein"]
+  },
+  {
+    "title": "Masala Khichdi",
+    "ingredients": [
+      {"name": "rice", "qty": 0.15, "unit": "kg"},
+      {"name": "moong dal", "qty": 0.1, "unit": "kg"},
+      {"name": "ghee", "qty": 0.02, "unit": "kg"},
+      {"name": "turmeric", "qty": 0.005, "unit": "kg"},
+      {"name": "cumin", "qty": 0.005, "unit": "kg"}
+    ],
+    "time_min": 30,
+    "difficulty": "easy",
+    "tags": ["comfort-food", "one-pot", "digestive"]
+  },
+  {
+    "title": "Egg Curry",
+    "ingredients": [
+      {"name": "eggs", "qty": 4, "unit": "pcs"},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger-garlic paste", "qty": 0.02, "unit": "kg"},
+      {"name": "coriander powder", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["non-veg", "high-protein", "quick"]
+  },
+  {
+    "title": "Vegetable Pulao",
+    "ingredients": [
+      {"name": "basmati rice", "qty": 0.25, "unit": "kg"},
+      {"name": "mixed vegetables", "qty": 0.3, "unit": "kg"},
+      {"name": "ghee", "qty": 0.02, "unit": "kg"},
+      {"name": "whole spices", "qty": 0.01, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["one-pot", "lunch", "dinner"]
+  },
+  {
+    "title": "Dal Makhani",
+    "ingredients": [
+      {"name": "whole black gram", "qty": 0.15, "unit": "kg", "sub": ["sabut urad"]},
+      {"name": "kidney beans", "qty": 0.05, "unit": "kg", "sub": ["rajma"]},
+      {"name": "butter", "qty": 0.05, "unit": "kg"},
+      {"name": "cream", "qty": 0.05, "unit": "l"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"}
+    ],
+    "time_min": 60,
+    "difficulty": "hard",
+    "tags": ["restaurant-style", "rich", "north-indian"]
+  },
+  {
+    "title": "Aloo Gobi",
+    "ingredients": [
+      {"name": "potato", "qty": 0.25, "unit": "kg"},
+      {"name": "cauliflower", "qty": 0.3, "unit": "kg"},
+      {"name": "turmeric", "qty": 0.005, "unit": "kg"},
+      {"name": "coriander powder", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 30,
+    "difficulty": "easy",
+    "tags": ["veg", "dry-curry", "everyday"]
+  },
+  {
+    "title": "Chicken Biryani",
+    "ingredients": [
+      {"name": "chicken", "qty": 0.5, "unit": "kg"},
+      {"name": "basmati rice", "qty": 0.3, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.1, "unit": "kg"},
+      {"name": "biryani masala", "qty": 0.02, "unit": "kg"},
+      {"name": "onion", "qty": 0.2, "unit": "kg"},
+      {"name": "mint leaves", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 90,
+    "difficulty": "hard",
+    "tags": ["festive", "non-veg", "special-occasion"]
+  },
+  {
+    "title": "Pav Bhaji",
+    "ingredients": [
+      {"name": "mixed vegetables", "qty": 0.5, "unit": "kg"},
+      {"name": "pav", "qty": 8, "unit": "pcs"},
+      {"name": "butter", "qty": 0.05, "unit": "kg"},
+      {"name": "pav bhaji masala", "qty": 0.02, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "lemon", "qty": 1, "unit": "pcs"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["street-food", "mumbai-style", "dinner"]
+  },
+  {
+    "title": "Rajma Chawal",
+    "ingredients": [
+      {"name": "kidney beans", "qty": 0.2, "unit": "kg", "sub": ["rajma"]},
+      {"name": "rice", "qty": 0.2, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 50,
+    "difficulty": "medium",
+    "tags": ["comfort-food", "north-indian", "high-protein"]
+  },
+  {
+    "title": "Mushroom Masala",
+    "ingredients": [
+      {"name": "button mushrooms", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.15, "unit": "kg"},
+      {"name": "cream", "qty": 0.05, "unit": "l"},
+      {"name": "coriander leaves", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["quick", "restaurant-style", "dinner"]
+  },
+  {
+    "title": "Masala Omelette",
+    "ingredients": [
+      {"name": "eggs", "qty": 3, "unit": "pcs"},
+      {"name": "onion", "qty": 0.05, "unit": "kg"},
+      {"name": "tomato", "qty": 0.05, "unit": "kg"},
+      {"name": "green chili", "qty": 1, "unit": "pcs"},
+      {"name": "coriander leaves", "qty": 0.01, "unit": "kg"},
+      {"name": "butter", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 10,
+    "difficulty": "easy",
+    "tags": ["breakfast", "quick", "high-protein"]
+  },
+  {
+    "title": "Vegetable Noodles",
+    "ingredients": [
+      {"name": "noodles", "qty": 0.2, "unit": "kg"},
+      {"name": "mixed vegetables", "qty": 0.2, "unit": "kg"},
+      {"name": "soy sauce", "qty": 0.02, "unit": "l"},
+      {"name": "vinegar", "qty": 0.01, "unit": "l"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 20,
+    "difficulty": "easy",
+    "tags": ["indochinese", "quick", "lunch"]
+  },
+  {
+    "title": "Kadai Paneer",
+    "ingredients": [
+      {"name": "paneer", "qty": 0.25, "unit": "kg"},
+      {"name": "capsicum", "qty": 0.15, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "kadai masala", "qty": 0.02, "unit": "kg"},
+      {"name": "cream", "qty": 0.05, "unit": "l"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["restaurant-style", "rich", "dinner"]
+  },
+  {
+    "title": "Masala Dosa",
+    "ingredients": [
+      {"name": "dosa batter", "qty": 0.3, "unit": "kg"},
+      {"name": "potato", "qty": 0.2, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "chana dal", "qty": 0.02, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["south-indian", "breakfast", "dinner"]
+  },
+  {
+    "title": "Chicken Tikka Masala",
+    "ingredients": [
+      {"name": "chicken", "qty": 0.5, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.1, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l"},
+      {"name": "kashmiri red chili", "qty": 0.01, "unit": "kg"},
+      {"name": "garam masala", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 50,
+    "difficulty": "hard",
+    "tags": ["non-veg", "restaurant-style", "special"]
+  },
+  {
+    "title": "Vegetable Pulao",
+    "ingredients": [
+      {"name": "basmati rice", "qty": 0.25, "unit": "kg"},
+      {"name": "mixed vegetables", "qty": 0.3, "unit": "kg"},
+      {"name": "ghee", "qty": 0.02, "unit": "kg"},
+      {"name": "whole spices", "qty": 0.01, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["one-pot", "lunch", "dinner"]
+  },
+  {
+    "title": "Butter Chicken",
+    "ingredients": [
+      {"name": "chicken", "qty": 0.5, "unit": "kg"},
+      {"name": "butter", "qty": 0.05, "unit": "kg"},
+      {"name": "tomato", "qty": 0.3, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l"},
+      {"name": "garlic", "qty": 0.02, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "garam masala", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 45,
+    "difficulty": "medium",
+    "tags": ["non-veg", "restaurant-style", "special"]
+  },
+  {
+    "title": "Jeera Rice",
+    "ingredients": [
+      {"name": "basmati rice", "qty": 0.25, "unit": "kg"},
+      {"name": "cumin seeds", "qty": 0.01, "unit": "kg"},
+      {"name": "ghee", "qty": 0.02, "unit": "kg"},
+      {"name": "cashews", "qty": 0.02, "unit": "kg"},
+      {"name": "green chili", "qty": 2, "unit": "pcs"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["rice", "side-dish", "quick"]
+  },
+  {
+    "title": "Kaju Masala",
+    "ingredients": [
+      {"name": "cashews", "qty": 0.15, "unit": "kg"},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "cream", "qty": 0.05, "unit": "l"},
+      {"name": "kaju masala powder", "qty": 0.02, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["veg", "rich", "special-occasion"]
+  },
+  {
+    "title": "Lemon Rice",
+    "ingredients": [
+      {"name": "rice", "qty": 0.2, "unit": "kg"},
+      {"name": "lemon", "qty": 2, "unit": "pcs"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "peanuts", "qty": 0.03, "unit": "kg"},
+      {"name": "turmeric", "qty": 0.005, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.005, "unit": "kg"}
+    ],
+    "time_min": 20,
+    "difficulty": "easy",
+    "tags": ["south-indian", "tiffin", "quick"]
+  },
+  {
+    "title": "Malai Kofta",
+    "ingredients": [
+      {"name": "paneer", "qty": 0.2, "unit": "kg"},
+      {"name": "potato", "qty": 0.15, "unit": "kg"},
+      {"name": "cashews", "qty": 0.03, "unit": "kg"},
+      {"name": "tomato", "qty": 0.25, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l"},
+      {"name": "khoya", "qty": 0.05, "unit": "kg"}
+    ],
+    "time_min": 50,
+    "difficulty": "hard",
+    "tags": ["veg", "restaurant-style", "special"]
+  },
+  {
+    "title": "Tomato Rice",
+    "ingredients": [
+      {"name": "rice", "qty": 0.25, "unit": "kg"},
+      {"name": "tomato", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "ginger-garlic paste", "qty": 0.02, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.005, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"}
+    ],
+    "time_min": 30,
+    "difficulty": "easy",
+    "tags": ["south-indian", "one-pot", "lunch"]
+  },
+  {
+    "title": "Fish Curry",
+    "ingredients": [
+      {"name": "fish", "qty": 0.4, "unit": "kg"},
+      {"name": "coconut milk", "qty": 0.2, "unit": "l"},
+      {"name": "tamarind", "qty": 0.01, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.1, "unit": "kg"},
+      {"name": "fish curry masala", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["non-veg", "coastal", "dinner"]
+  },
+  {
+    "title": "Veg Biryani",
+    "ingredients": [
+      {"name": "basmati rice", "qty": 0.3, "unit": "kg"},
+      {"name": "mixed vegetables", "qty": 0.4, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.1, "unit": "kg"},
+      {"name": "biryani masala", "qty": 0.02, "unit": "kg"},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "mint leaves", "qty": 0.02, "unit": "kg"},
+      {"name": "ghee", "qty": 0.03, "unit": "kg"}
+    ],
+    "time_min": 60,
+    "difficulty": "hard",
+    "tags": ["veg", "festive", "special-occasion"]
+  },
+  {
+    "title": "Kadhi Pakora",
+    "ingredients": [
+      {"name": "besan", "qty": 0.15, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.2, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "fenugreek leaves", "qty": 0.01, "unit": "kg"},
+      {"name": "cumin seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "oil", "qty": 0.1, "unit": "l"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["north-indian", "comfort-food", "lunch"]
+  },
+  {
+    "title": "Coconut Rice",
+    "ingredients": [
+      {"name": "rice", "qty": 0.25, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.1, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "urad dal", "qty": 0.01, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.005, "unit": "kg"},
+      {"name": "cashews", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["south-indian", "lunch", "quick"]
+  },
+  {
+    "title": "Paneer Makhani",
+    "ingredients": [
+      {"name": "paneer", "qty": 0.3, "unit": "kg"},
+      {"name": "tomato", "qty": 0.3, "unit": "kg"},
+      {"name": "cashew paste", "qty": 0.03, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l"},
+      {"name": "butter", "qty": 0.03, "unit": "kg"},
+      {"name": "kasuri methi", "qty": 0.005, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "restaurant-style", "dinner"]
+  },
+  {
+    "title": "Avial",
+    "ingredients": [
+      {"name": "mixed vegetables", "qty": 0.4, "unit": "kg", "sub": ["carrot", "beans", "potato", "yam", "raw banana"]},
+      {"name": "yogurt", "qty": 0.15, "unit": "kg"},
+      {"name": "coconut", "qty": 0.1, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.01, "unit": "kg"},
+      {"name": "coconut oil", "qty": 0.02, "unit": "l"},
+      {"name": "cumin seeds", "qty": 0.005, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["kerala", "sadya", "coconut-based"]
+  },
+  {
+    "title": "Beans Poriyal",
+    "ingredients": [
+      {"name": "beans", "qty": 0.3, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.05, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "urad dal", "qty": 0.01, "unit": "kg"},
+      {"name": "dry red chili", "qty": 2, "unit": "pcs"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 20,
+    "difficulty": "easy",
+    "tags": ["tamil-nadu", "side-dish", "dry-curry"]
+  },
+  {
+    "title": "Cabbage Kootu",
+    "ingredients": [
+      {"name": "cabbage", "qty": 0.3, "unit": "kg"},
+      {"name": "moong dal", "qty": 0.1, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.05, "unit": "kg"},
+      {"name": "cumin seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "turmeric", "qty": 0.003, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["tamil-nadu", "comfort-food", "lentil-based"]
+  },
+  {
+    "title": "Drumstick Sambar",
+    "ingredients": [
+      {"name": "drumsticks", "qty": 0.25, "unit": "kg"},
+      {"name": "toor dal", "qty": 0.15, "unit": "kg"},
+      {"name": "tamarind", "qty": 0.02, "unit": "kg"},
+      {"name": "sambar powder", "qty": 0.02, "unit": "kg"},
+      {"name": "jaggery", "qty": 0.01, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["tamil-nadu", "lentil-based", "traditional"]
+  },
+  {
+    "title": "Beetroot Pachadi",
+    "ingredients": [
+      {"name": "beetroot", "qty": 0.25, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.2, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.05, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.005, "unit": "kg"},
+      {"name": "green chili", "qty": 2, "unit": "pcs"}
+    ],
+    "time_min": 20,
+    "difficulty": "easy",
+    "tags": ["kerala", "raita", "side-dish"]
+  },
+  {
+    "title": "Vazhakkai Curry",
+    "ingredients": [
+      {"name": "raw banana", "qty": 0.3, "unit": "kg"},
+      {"name": "coconut milk", "qty": 0.2, "unit": "l"},
+      {"name": "turmeric", "qty": 0.003, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.01, "unit": "kg"},
+      {"name": "coconut oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["kerala", "coconut-based", "side-dish"]
+  },
+  {
+    "title": "Kootu Curry",
+    "ingredients": [
+      {"name": "yellow pumpkin", "qty": 0.2, "unit": "kg"},
+      {"name": "cowpeas", "qty": 0.1, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.1, "unit": "kg"},
+      {"name": "cumin seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "turmeric", "qty": 0.003, "unit": "kg"},
+      {"name": "coconut oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 45,
+    "difficulty": "medium",
+    "tags": ["kerala", "sadya", "festive"]
+  },
+  {
+    "title": "Paruppu Usili",
+    "ingredients": [
+      {"name": "beans", "qty": 0.25, "unit": "kg"},
+      {"name": "toor dal", "qty": 0.1, "unit": "kg"},
+      {"name": "red chili", "qty": 3, "unit": "pcs"},
+      {"name": "asafoetida", "qty": 0.001, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 40,
+    "difficulty": "hard",
+    "tags": ["tamil-nadu", "protein-rich", "traditional"]
+  },
+  {
+    "title": "Mor Kuzhambu",
+    "ingredients": [
+      {"name": "yogurt", "qty": 0.3, "unit": "kg"},
+      {"name": "coconut", "qty": 0.1, "unit": "kg"},
+      {"name": "drumstick", "qty": 1, "unit": "pcs"},
+      {"name": "green chili", "qty": 2, "unit": "pcs"},
+      {"name": "cumin seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["tamil-nadu", "yogurt-based", "summer-special"]
+  },
+  {
+    "title": "Poriyal Medley",
+    "ingredients": [
+      {"name": "carrot", "qty": 0.15, "unit": "kg"},
+      {"name": "beans", "qty": 0.15, "unit": "kg"},
+      {"name": "peas", "qty": 0.1, "unit": "kg"},
+      {"name": "grated coconut", "qty": 0.05, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "urad dal", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["tamil-nadu", "mixed-vegetable", "side-dish"]
+  },
+  {
+    "title": "Pulikachal",
+    "ingredients": [
+      {"name": "tamarind", "qty": 0.02, "unit": "kg"},
+      {"name": "sesame oil", "qty": 0.05, "unit": "l"},
+      {"name": "peanuts", "qty": 0.05, "unit": "kg"},
+      {"name": "mustard seeds", "qty": 0.005, "unit": "kg"},
+      {"name": "fenugreek seeds", "qty": 0.003, "unit": "kg"},
+      {"name": "red chili powder", "qty": 0.01, "unit": "kg"},
+      {"name": "jaggery", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 40,
+    "difficulty": "medium",
+    "tags": ["tamil-nadu", "tangy", "rice-accompaniment"]
+  }
+]

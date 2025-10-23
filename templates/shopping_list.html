@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Shopping List - ShelfLife+{% endblock %}
+
+{% block content %}
+<!-- Shopping List Hero Section -->
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-4">
+      <i data-lucide="shopping-cart" class="w-8 h-8 text-white"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Smart Shopping List</h1>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      AI-generated shopping list based on your consumption patterns and current inventory levels.
+    </p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="list" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ summary.total_items }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Total Items</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="alert-triangle" class="w-6 h-6 text-red-600 dark:text-red-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ summary.urgent_items }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Urgent Items</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="clock" class="w-6 h-6 text-orange-600 dark:text-orange-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ summary.high_priority_items }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">High Priority</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="grid-3x3" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ summary.categories }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Categories</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+    <div class="flex items-center space-x-4">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Shopping List</h2>
+      {% if summary.urgent_items > 0 %}
+      <span class="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-sm font-medium">
+        {{ summary.urgent_items }} urgent items
+      </span>
+      {% endif %}
+    </div>
+    
+    <div class="flex items-center space-x-3">
+      <button onclick="printList()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors flex items-center">
+        <i data-lucide="printer" class="w-4 h-4 mr-2"></i>
+        Print List
+      </button>
+      <button onclick="exportList()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors flex items-center">
+        <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+        Export
+      </button>
+      <button onclick="shareList()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm transition-colors flex items-center">
+        <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
+        Share
+      </button>
+    </div>
+  </div>
+
+  <!-- Shopping List by Category -->
+  {% if categorized_items %}
+  <div class="space-y-6">
+    {% for category, items in categorized_items.items() %}
+    {% set cat_info = category_info[category] %}
+    <div class="glass rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+          <div class="w-8 h-8 bg-{{ cat_info.color }}-100 dark:bg-{{ cat_info.color }}-900/30 rounded-lg flex items-center justify-center mr-3">
+            <i data-lucide="{{ cat_info.icon }}" class="w-4 h-4 text-{{ cat_info.color }}-600 dark:text-{{ cat_info.color }}-400"></i>
+          </div>
+          {{ cat_info.name }}
+        </h3>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ items|length }} items</span>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for item in items %}
+        <div class="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 border-l-4 border-{{ 'red' if item.priority == 'urgent' else 'orange' if item.priority == 'high' else 'blue' if item.priority == 'medium' else 'gray' }}-500">
+          <div class="flex items-start justify-between mb-2">
+            <h4 class="font-medium text-gray-900 dark:text-white">{{ item.name }}</h4>
+            <span class="px-2 py-1 bg-{{ 'red' if item.priority == 'urgent' else 'orange' if item.priority == 'high' else 'blue' if item.priority == 'medium' else 'gray' }}-100 dark:bg-{{ 'red' if item.priority == 'urgent' else 'orange' if item.priority == 'high' else 'blue' if item.priority == 'medium' else 'gray' }}-900/30 text-{{ 'red' if item.priority == 'urgent' else 'orange' if item.priority == 'high' else 'blue' if item.priority == 'medium' else 'gray' }}-700 dark:text-{{ 'red' if item.priority == 'urgent' else 'orange' if item.priority == 'high' else 'blue' if item.priority == 'medium' else 'gray' }}-300 rounded-full text-xs font-medium">
+              {{ item.priority.title() }}
+            </span>
+          </div>
+          
+          <div class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+            <div class="flex items-center justify-between">
+              <span>Suggested:</span>
+              <span class="font-medium">{{ item.suggested_quantity }} {{ item.unit }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Current stock:</span>
+              <span class="font-medium">{{ item.current_stock }} {{ item.unit }}</span>
+            </div>
+            {% if item.estimated_days_until_needed > 0 and item.priority != 'urgent' %}
+            <div class="flex items-center justify-between">
+              <span>Needed in:</span>
+              <span class="font-medium">{{ item.estimated_days_until_needed }} days</span>
+            </div>
+            {% elif item.priority == 'urgent' and item.current_stock > 0 %}
+            <div class="flex items-center justify-between">
+              <span>Stock expires:</span>
+              <span class="font-medium text-red-600">Soon</span>
+            </div>
+            {% endif %}
+          </div>
+          
+          <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{ item.reason }}</p>
+          </div>
+          
+          <!-- Checkbox for shopping -->
+          <div class="mt-3 flex items-center">
+            <input type="checkbox" class="shopping-item-checkbox rounded border-gray-300 text-green-600 focus:ring-green-500" data-item="{{ item.name }}" id="item-{{ loop.index }}">
+            <label for="item-{{ loop.index }}" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Add to cart</label>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <!-- Empty State -->
+  <div class="text-center py-12">
+    <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+      <i data-lucide="shopping-cart" class="w-12 h-12 text-gray-400"></i>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Your pantry is well stocked!</h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">Based on your current inventory and consumption patterns, you don't need to buy anything right now.</p>
+    <a href="{{ url_for('dashboard') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+      <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
+      Back to Dashboard
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Shopping Tips -->
+  {% if shopping_items %}
+  <div class="mt-8 glass rounded-xl p-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+      <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500 mr-2"></i>
+      Smart Shopping Tips
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+      <div class="flex items-start space-x-3">
+        <i data-lucide="clock" class="w-4 h-4 text-blue-500 mt-0.5"></i>
+        <div>
+          <p class="font-medium text-gray-900 dark:text-white">Shop for urgent items first</p>
+          <p class="text-gray-600 dark:text-gray-400">Focus on red-marked items that you'll run out of soon</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i data-lucide="leaf" class="w-4 h-4 text-green-500 mt-0.5"></i>
+        <div>
+          <p class="font-medium text-gray-900 dark:text-white">Buy fresh items last</p>
+          <p class="text-gray-600 dark:text-gray-400">Get fruits and vegetables at the end of your shopping trip</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i data-lucide="package" class="w-4 h-4 text-purple-500 mt-0.5"></i>
+        <div>
+          <p class="font-medium text-gray-900 dark:text-white">Buy in bulk for staples</p>
+          <p class="text-gray-600 dark:text-gray-400">Rice, flour, and spices can be bought in larger quantities</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <i data-lucide="calendar" class="w-4 h-4 text-orange-500 mt-0.5"></i>
+        <div>
+          <p class="font-medium text-gray-900 dark:text-white">Check expiry dates</p>
+          <p class="text-gray-600 dark:text-gray-400">Choose items with later expiry dates for better shelf life</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+// Print shopping list
+function printList() {
+  const printContent = document.querySelector('.max-w-7xl').innerHTML;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Shopping List - ShelfLife+</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          .glass { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+          .grid { display: grid; gap: 16px; }
+          .text-center { text-align: center; }
+          .font-bold { font-weight: bold; }
+          .text-sm { font-size: 14px; }
+          .text-xs { font-size: 12px; }
+          .mb-4 { margin-bottom: 16px; }
+          .p-4 { padding: 16px; }
+          @media print { .no-print { display: none; } }
+        </style>
+      </head>
+      <body>${printContent}</body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+}
+
+// Export shopping list
+function exportList() {
+  const items = [];
+  document.querySelectorAll('[data-item]').forEach(el => {
+    const itemName = el.getAttribute('data-item');
+    const card = el.closest('.border-l-4');
+    const quantity = card.querySelector('.font-medium').textContent;
+    const priority = card.querySelector('.rounded-full').textContent.trim();
+    items.push(`${itemName} - ${quantity} (${priority})`);
+  });
+  
+  const content = `ShelfLife+ Shopping List\n\nGenerated: ${new Date().toLocaleDateString()}\n\n${items.join('\n')}`;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'shopping-list.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Share shopping list
+function shareList() {
+  const items = [];
+  document.querySelectorAll('[data-item]').forEach(el => {
+    const itemName = el.getAttribute('data-item');
+    const card = el.closest('.border-l-4');
+    const quantity = card.querySelector('.font-medium').textContent;
+    items.push(`• ${itemName} - ${quantity}`);
+  });
+  
+  const text = `My ShelfLife+ Shopping List:\n\n${items.join('\n')}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Shopping List',
+      text: text
+    });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Shopping list copied to clipboard!');
+    });
+  }
+}
+
+// Track checked items
+document.querySelectorAll('.shopping-item-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', function() {
+    const card = this.closest('.border-l-4');
+    if (this.checked) {
+      card.style.opacity = '0.6';
+      card.style.textDecoration = 'line-through';
+    } else {
+      card.style.opacity = '1';
+      card.style.textDecoration = 'none';
+    }
+  });
+});
+</script>
+{% endblock %}

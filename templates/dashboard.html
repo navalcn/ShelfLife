@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - ShelfLife+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Hero Section -->
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl mb-4">
+      <i data-lucide="home" class="w-8 h-8 text-white"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Your Kitchen Dashboard</h1>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      Track your inventory, reduce waste, and discover recipes with AI-powered insights.
+    </p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="alert-triangle" class="w-6 h-6 text-red-600 dark:text-red-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ expiring_counts['Expired/Today'] }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Expired/Today</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="clock" class="w-6 h-6 text-orange-600 dark:text-orange-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ expiring_counts['Soon (<=3d)'] }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Expiring Soon</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="check-circle" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ expiring_counts['Safe (>3d)'] }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Fresh Items</p>
+    </div>
+    
+    <div class="glass rounded-xl p-6 text-center">
+      <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="calendar-x" class="w-6 h-6 text-gray-600 dark:text-gray-400"></i>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ expiring_counts['No Date'] }}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">No Expiry Date</p>
+    </div>
+  </div>
+
+  <!-- Recipe Suggestions -->
+  {% if top_recipes and top_recipes|length > 0 %}
+  <div class="glass rounded-xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+        <i data-lucide="chef-hat" class="w-6 h-6 mr-3 text-orange-600"></i>
+        Recipe Suggestions
+      </h3>
+      <span class="text-sm text-gray-500 dark:text-gray-400">{{ top_recipes|length }} recipes found</span>
+    </div>
+    
+    <!-- Scrollable Recipe Container -->
+    <div class="max-h-96 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+      {% for r in top_recipes %}
+        <div class="bg-white/50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200/50 dark:border-gray-700/50 hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all duration-200">
+          <!-- Recipe Header -->
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-2">
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{ r.title }}</h4>
+                <div class="flex items-center space-x-2">
+                  {% if r.difficulty == 'easy' %}
+                    <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium">Easy</span>
+                  {% elif r.difficulty == 'medium' %}
+                    <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs font-medium">Medium</span>
+                  {% else %}
+                    <span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-medium">Hard</span>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                {% if r.time_min %}
+                  <span class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 mr-1"></i>
+                    {{ r.time_min }} min
+                  </span>
+                {% endif %}
+                {% if r.coverage %}
+                  <span class="flex items-center">
+                    <i data-lucide="check-circle" class="w-4 h-4 mr-1 text-green-500"></i>
+                    {{ "%.0f"|format(r.coverage * 100) }}% available
+                  </span>
+                {% endif %}
+                {% if r.expiring_ingredients and r.expiring_ingredients > 0 %}
+                  <span class="flex items-center">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 mr-1 text-orange-500"></i>
+                    {{ r.expiring_ingredients }} expiring
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+            
+            <form method="post" class="ml-4">
+              <input type="hidden" name="action" value="cook_recipe" />
+              <input type="hidden" name="recipe_title" value="{{ r.title }}" />
+              <button class="px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200 flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl" type="submit">
+                <i data-lucide="chef-hat" class="w-4 h-4"></i>
+                <span>Cook Today</span>
+              </button>
+            </form>
+          </div>
+          
+          <!-- Ingredients List -->
+          <div class="border-t border-gray-200/50 dark:border-gray-700/50 pt-3">
+            <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+              <i data-lucide="shopping-basket" class="w-4 h-4 mr-1"></i>
+              Required Ingredients:
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {% for ing in r.ingredients %}
+                {% set ing_available = false %}
+                {% set ing_quantity = 0 %}
+                {% for match in r.ingredient_matches %}
+                  {% if match.ingredient.lower() == ing.name.lower() and match.status == 'matched' %}
+                    {% set ing_available = true %}
+                    {% set ing_quantity = match.match.available_qty %}
+                  {% endif %}
+                {% endfor %}
+                
+                <div class="flex items-center justify-between p-2 rounded-lg {% if ing_available %}bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800{% else %}bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800{% endif %}">
+                  <div class="flex items-center space-x-2">
+                    {% if ing_available %}
+                      <i data-lucide="check" class="w-3 h-3 text-green-600 dark:text-green-400"></i>
+                    {% else %}
+                      <i data-lucide="x" class="w-3 h-3 text-red-600 dark:text-red-400"></i>
+                    {% endif %}
+                    <span class="text-sm font-medium {% if ing_available %}text-green-800 dark:text-green-200{% else %}text-red-800 dark:text-red-200{% endif %}">
+                      {{ ing.name|title }}
+                    </span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-semibold {% if ing_available %}text-green-700 dark:text-green-300{% else %}text-red-700 dark:text-red-300{% endif %}">
+                      {{ ing.qty }} {{ ing.unit }}
+                    </div>
+                    {% if ing_available and ing_quantity > 0 %}
+                      <div class="text-xs {% if ing_available %}text-green-600 dark:text-green-400{% else %}text-red-600 dark:text-red-400{% endif %}">
+                        Have: {{ "%.1f"|format(ing_quantity) }} {{ ing.unit }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            
+            {% if r.missing_ingredients > 0 %}
+              <div class="mt-2 text-xs text-red-600 dark:text-red-400 flex items-center">
+                <i data-lucide="info" class="w-3 h-3 mr-1"></i>
+                Missing {{ r.missing_ingredients }} ingredient{{ 's' if r.missing_ingredients != 1 else '' }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <!-- Fallback Recipe Section -->
+  <div class="glass rounded-xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+        <i data-lucide="chef-hat" class="w-5 h-5 mr-2 text-orange-600"></i>
+        Recipe Suggestions
+      </h3>
+    </div>
+    <div class="text-center py-8">
+      <i data-lucide="utensils-crossed" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i>
+      <p class="text-gray-600 dark:text-gray-400 mb-4">Add more ingredients to get personalized recipe suggestions!</p>
+      <p class="text-sm text-gray-500 dark:text-gray-500">We'll recommend recipes based on what's in your pantry and what's expiring soon.</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Recent Cooked Recipes -->
+  {% if recent_cooked and recent_cooked|length > 0 %}
+  <div class="glass rounded-xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+        <i data-lucide="history" class="w-5 h-5 mr-2 text-green-600"></i>
+        Recently Cooked
+      </h3>
+      <span class="text-sm text-gray-500 dark:text-gray-400">Last 5 recipes</span>
+    </div>
+    
+    <div class="space-y-3">
+      {% for cooked in recent_cooked %}
+        <div class="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-800/30 rounded-lg border border-green-200/50 dark:border-green-700/50">
+          <div class="flex-1">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white">{{ cooked.recipe_title }}</h4>
+                <div class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                  <span class="flex items-center">
+                    <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
+                    {{ cooked.cooked_at.strftime('%b %d, %I:%M %p') }}
+                  </span>
+                  {% if cooked.total_items_used > 0 %}
+                    <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs">
+                      Used {{ cooked.total_items_used }} ingredients
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-green-600 dark:text-green-400 font-medium">✓ Cooked</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Items Table -->
+<div class="glass rounded-xl p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+      <i data-lucide="list" class="w-5 h-5 mr-2"></i>
+      Your Items
+    </h3>
+    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-4 lg:space-y-0 lg:space-x-4">
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input id="table-search" class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Search items...">
+        </div>
+        
+        <!-- Status Filter -->
+        <select id="status-filter" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          <option value="">All Status</option>
+          <option value="expired">Expired</option>
+          <option value="soon">Expiring Soon</option>
+          <option value="fresh">Fresh</option>
+          <option value="no-date">No Expiry Date</option>
+        </select>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Bulk Actions -->
+        <div class="flex items-center space-x-2" id="bulk-actions" style="display: none;">
+          <span class="text-sm text-gray-600 dark:text-gray-400" id="selected-count">0 selected</span>
+          <button id="bulk-delete" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors flex items-center">
+            <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>
+            Delete Selected
+          </button>
+          <button id="bulk-update-expiry" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors flex items-center">
+            <i data-lucide="calendar" class="w-4 h-4 mr-1"></i>
+            Set Expiry
+          </button>
+        </div>
+        
+        <span class="text-sm text-gray-500 dark:text-gray-400">Total: {{ items_vm|length }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+    <div class="overflow-x-auto max-h-96">
+      <table class="w-full min-w-full" id="items-table">
+        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white" style="width: 40px;">
+              <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" title="Select all items">
+            </th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" data-sort="str" style="min-width: 160px; width: 25%;">
+              <div class="flex items-center">
+                Product
+                <i data-lucide="chevron-up-down" class="w-4 h-4 ml-1 text-gray-400"></i>
+              </div>
+            </th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" data-sort="num" style="min-width: 100px; width: 15%;">
+              <div class="flex items-center">
+                Remaining
+                <i data-lucide="chevron-up-down" class="w-4 h-4 ml-1 text-gray-400"></i>
+              </div>
+            </th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white" style="min-width: 120px; width: 20%;">Status</th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" data-sort="date" style="min-width: 100px; width: 15%;">
+              <div class="flex items-center">
+                Expiry
+                <i data-lucide="chevron-up-down" class="w-4 h-4 ml-1 text-gray-400"></i>
+              </div>
+            </th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white hidden md:table-cell" style="min-width: 80px; width: 10%;">Photo</th>
+            <th class="text-left py-3 px-3 font-medium text-gray-900 dark:text-white" style="min-width: 100px; width: 15%;">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        {% for row in items_vm %}
+          {% set it = row.item %}
+          <tr id="item-{{ it.id }}" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors" data-status="{{ row.status }}">
+            <td class="py-3 px-3">
+              <input type="checkbox" class="item-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-item-id="{{ it.id }}" title="Select this item">
+            </td>
+            <td class="py-3 px-3">
+              <div class="flex flex-col space-y-1">
+                <input class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="text" name="name" value="{{ it.name }}" form="f{{ it.id }}" />
+                <div class="flex flex-wrap gap-1">
+                  {% set category_info = get_category_info(it.name) %}
+                  {% if category_info.name != 'Unknown' %}
+                  <span class="px-1.5 py-0.5 bg-{{ category_info.color }}-100 dark:bg-{{ category_info.color }}-900/30 text-{{ category_info.color }}-700 dark:text-{{ category_info.color }}-300 rounded text-xs flex items-center" title="{{ category_info.name }} category">
+                    <i data-lucide="{{ category_info.icon }}" class="w-3 h-3 mr-1"></i>
+                    {{ category_info.name }}
+                  </span>
+                  {% endif %}
+                  {% if row.is_single_use %}<span class="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs" title="Single-use pack">Single</span>{% endif %}
+                  {% if row.status == 'expired' %}<span class="px-1.5 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded text-xs" title="Expired batch">Expired</span>{% endif %}
+                  {% if row.status == 'soon' %}<span class="px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-xs" title="Expiring within 3 days">Soon</span>{% endif %}
+                  {% if row.is_low %}<span class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs" title="Low stock or finishing soon">Low</span>{% endif %}
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="text-sm text-gray-900 dark:text-white font-medium">{{ it.remaining_quantity or 0 }} {{ it.unit or '' }}</span>
+            </td>
+            <td class="py-3 px-3">
+              {% if row.status == 'expired' %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                  <i data-lucide="x-circle" class="w-3 h-3 mr-1"></i>
+                  Expired
+                </span>
+              {% elif row.status == 'soon' %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300">
+                  <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
+                  {{ row.days_left }}d
+                </span>
+              {% elif row.status == 'fresh' %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                  <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
+                  Fresh
+                </span>
+              {% else %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                  <i data-lucide="calendar-x" class="w-3 h-3 mr-1"></i>
+                  No Date
+                </span>
+              {% endif %}
+            </td>
+            <td class="py-3 px-3">
+              <input class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent datepicker" type="text" name="expiry_date" value="{{ it.expiry_date or '' }}" placeholder="YYYY-MM-DD" form="f{{ it.id }}" title="Set expiry date" />
+            </td>
+            <td class="py-3 px-3 hidden md:table-cell">
+              <form method="post" enctype="multipart/form-data" class="flex items-center space-x-2">
+                <input type="hidden" name="action" value="upload_expiry_photo" />
+                <input type="hidden" name="item_id" value="{{ it.id }}" />
+                <input class="text-sm file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-sm file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" type="file" name="expiry_image" accept="image/*" title="Choose an expiry photo" />
+                <button class="p-1 text-gray-600 hover:text-primary-600 transition-colors" type="submit" title="Detect expiry from photo">
+                  <i data-lucide="camera" class="w-4 h-4"></i>
+                </button>
+              </form>
+            </td>
+            <td class="py-3 px-3">
+              <div class="flex flex-col gap-1">
+                <form method="post" class="flex items-center space-x-1">
+                  <input type="hidden" name="action" value="update_remaining" />
+                  <input type="hidden" name="item_id" value="{{ it.id }}" />
+                  <input class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="number" step="0.01" name="remaining_quantity" value="{{ it.remaining_quantity or 0 }}" style="width: 60px;" title="Edit remaining quantity" />
+                  <button class="px-2 py-1 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-xs transition-colors" type="submit" title="Save remaining">Save</button>
+                </form>
+                {% if row.is_single_use %}
+                  <form method="post" action="{{ url_for('consume_pack') }}">
+                    <input type="hidden" name="item_id" value="{{ it.id }}" />
+                    <button class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition-colors" type="submit" title="Mark entire pack consumed">Consume</button>
+                  </form>
+                {% endif %}
+                <form method="post">
+                  <input type="hidden" name="action" value="delete_item" />
+                  <input type="hidden" name="item_id" value="{{ it.id }}" />
+                  <button class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs transition-colors" type="submit" title="Delete item" onclick="return confirm('Delete this item?');">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Add New Item Form -->
+  <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+    <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+      <i data-lucide="plus-circle" class="w-5 h-5 mr-2 text-green-600"></i>
+      Add New Item
+    </h4>
+    <form method="post" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <input type="hidden" name="action" value="add_item" />
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+        <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="text" name="new_name" placeholder="Product name" required />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity</label>
+        <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="number" step="0.01" name="new_qty" placeholder="1" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label>
+        <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="text" name="new_unit" placeholder="kg, pcs, l" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Expiry Date</label>
+        <input class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent" type="date" name="new_expiry" />
+      </div>
+      <div class="flex items-end">
+        <button class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors flex items-center justify-center" type="submit">
+          <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+          Add Item
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Hidden forms for inline editing -->
+{% for row in items_vm %}
+  {% set it = row.item %}
+  <form id="f{{ it.id }}" method="post" style="display: none;">
+    <input type="hidden" name="action" value="update_item" />
+    <input type="hidden" name="item_id" value="{{ it.id }}" />
+  </form>
+{% endfor %}
+
+<script>
+// Enhanced search and filter functionality
+function filterTable() {
+  const searchTerm = document.getElementById('table-search').value.toLowerCase();
+  const statusFilter = document.getElementById('status-filter').value;
+  const tableRows = document.querySelectorAll('#items-table tbody tr');
+  
+  tableRows.forEach(row => {
+    const productName = row.querySelector('input[name="name"]').value.toLowerCase();
+    const rowStatus = row.getAttribute('data-status');
+    
+    let showRow = true;
+    
+    // Search filter
+    if (searchTerm && !productName.includes(searchTerm)) {
+      showRow = false;
+    }
+    
+    // Status filter
+    if (statusFilter) {
+      if (statusFilter === 'no-date' && rowStatus !== 'unknown') {
+        showRow = false;
+      } else if (statusFilter !== 'no-date' && rowStatus !== statusFilter) {
+        showRow = false;
+      }
+    }
+    
+    row.style.display = showRow ? '' : 'none';
+  });
+}
+
+// Event listeners for search and filters
+document.getElementById('table-search').addEventListener('input', filterTable);
+document.getElementById('status-filter').addEventListener('change', filterTable);
+
+// Bulk selection functionality
+let selectedItems = new Set();
+
+// Select all checkbox
+document.getElementById('select-all').addEventListener('change', function() {
+  const checkboxes = document.querySelectorAll('.item-checkbox:not([style*="display: none"])');
+  const isChecked = this.checked;
+  
+  checkboxes.forEach(checkbox => {
+    const row = checkbox.closest('tr');
+    if (row.style.display !== 'none') {
+      checkbox.checked = isChecked;
+      const itemId = checkbox.getAttribute('data-item-id');
+      if (isChecked) {
+        selectedItems.add(itemId);
+      } else {
+        selectedItems.delete(itemId);
+      }
+    }
+  });
+  
+  updateBulkActions();
+});
+
+// Individual checkboxes
+document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', function() {
+    const itemId = this.getAttribute('data-item-id');
+    if (this.checked) {
+      selectedItems.add(itemId);
+    } else {
+      selectedItems.delete(itemId);
+    }
+    updateBulkActions();
+  });
+});
+
+// Update bulk actions visibility and count
+function updateBulkActions() {
+  const bulkActions = document.getElementById('bulk-actions');
+  const selectedCount = document.getElementById('selected-count');
+  
+  if (selectedItems.size > 0) {
+    bulkActions.style.display = 'flex';
+    selectedCount.textContent = `${selectedItems.size} selected`;
+  } else {
+    bulkActions.style.display = 'none';
+  }
+}
+
+// Bulk delete functionality
+document.getElementById('bulk-delete').addEventListener('click', function() {
+  if (selectedItems.size === 0) return;
+  
+  if (confirm(`Are you sure you want to delete ${selectedItems.size} selected items?`)) {
+    // Create form for bulk delete
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.style.display = 'none';
+    
+    // Add action
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'bulk_delete';
+    form.appendChild(actionInput);
+    
+    // Add selected item IDs
+    selectedItems.forEach(itemId => {
+      const itemInput = document.createElement('input');
+      itemInput.type = 'hidden';
+      itemInput.name = 'item_ids';
+      itemInput.value = itemId;
+      form.appendChild(itemInput);
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+});
+
+// Bulk update expiry functionality
+document.getElementById('bulk-update-expiry').addEventListener('click', function() {
+  if (selectedItems.size === 0) return;
+  
+  const expiryDate = prompt(`Set expiry date for ${selectedItems.size} selected items (YYYY-MM-DD):`);
+  if (expiryDate && /^\d{4}-\d{2}-\d{2}$/.test(expiryDate)) {
+    // Create form for bulk update
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.style.display = 'none';
+    
+    // Add action
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'bulk_update_expiry';
+    form.appendChild(actionInput);
+    
+    // Add expiry date
+    const expiryInput = document.createElement('input');
+    expiryInput.type = 'hidden';
+    expiryInput.name = 'expiry_date';
+    expiryInput.value = expiryDate;
+    form.appendChild(expiryInput);
+    
+    // Add selected item IDs
+    selectedItems.forEach(itemId => {
+      const itemInput = document.createElement('input');
+      itemInput.type = 'hidden';
+      itemInput.name = 'item_ids';
+      itemInput.value = itemId;
+      form.appendChild(itemInput);
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+});
+
+// Auto-submit forms when inputs change
+document.querySelectorAll('input[name="name"], input[name="expiry_date"]').forEach(input => {
+  input.addEventListener('blur', function() {
+    this.form.submit();
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}AI Survey - ShelfLife+{% endblock %}
+
+{% block content %}
+<!-- AI Survey Hero Section -->
+<div class="max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-4">
+      <i data-lucide="brain" class="w-8 h-8 text-white"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">AI-Powered Survey</h1>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      Help our AI learn your consumption patterns for better predictions and waste reduction.
+    </p>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 mb-6">
+        <div class="flex items-center">
+          <i data-lucide="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2"></i>
+          <span class="text-green-800 dark:text-green-200">{{ messages|join(', ') }}</span>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Household Context -->
+  <div class="glass rounded-2xl p-6 mb-8 animate-fade-in">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+      <i data-lucide="home" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2"></i>
+      Household Context
+    </h2>
+    <form method="post" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <input type="hidden" name="action" value="save_settings" />
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Household Size
+        </label>
+        <div class="relative">
+          <i data-lucide="users" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+          <input type="number" min="1" max="20" 
+                 class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                 name="household_size" value="{{ settings.household_size or 2 }}" />
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Number of people living in your home</p>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Cooking Frequency
+        </label>
+        <div class="relative">
+          <i data-lucide="chef-hat" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+          <select class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" name="cooking_frequency">
+            {% set cf = settings.cooking_frequency or 'mostly_home' %}
+            <option value="mostly_home" {{ 'selected' if cf=='mostly_home' else '' }}>Mostly at home (5+ days/week)</option>
+            <option value="mixed" {{ 'selected' if cf=='mixed' else '' }}>Mix of home/out (2-4 days/week)</option>
+            <option value="mostly_out" {{ 'selected' if cf=='mostly_out' else '' }}>Mostly outside (0-1 days/week)</option>
+          </select>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">How often you cook meals at home</p>
+      </div>
+      
+      <div class="flex items-end">
+        <button type="submit" 
+                class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200">
+          <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+          Save Settings
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- AI Confidence Analysis -->
+  {% if analysis %}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- High Confidence -->
+    <div class="glass rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+          <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+          High Confidence
+        </h3>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ analysis.high_confidence|length }} items</span>
+      </div>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+        AI is confident about these predictions based on your usage history.
+      </p>
+      <div id="high-confidence-items">
+        {% for item in analysis.high_confidence[:3] %}
+        <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+          <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+          <span class="text-xs text-green-600 dark:text-green-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+        </div>
+        {% endfor %}
+        
+        <div id="high-confidence-hidden" class="hidden">
+          {% for item in analysis.high_confidence[3:] %}
+          <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+            <span class="text-xs text-green-600 dark:text-green-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      {% if analysis.high_confidence|length > 3 %}
+      <button onclick="toggleItems('high-confidence')" 
+              class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-2 flex items-center">
+        <span id="high-confidence-text">+{{ analysis.high_confidence|length - 3 }} more items</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 ml-1" id="high-confidence-icon"></i>
+      </button>
+      {% endif %}
+    </div>
+
+    <!-- Medium Confidence -->
+    <div class="glass rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+          <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+          Medium Confidence
+        </h3>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ analysis.medium_confidence|length }} items</span>
+      </div>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+        AI has some data but could use your input for better accuracy.
+      </p>
+      <div id="medium-confidence-items">
+        {% for item in analysis.medium_confidence[:3] %}
+        <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+          <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+          <span class="text-xs text-yellow-600 dark:text-yellow-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+        </div>
+        {% endfor %}
+        
+        <div id="medium-confidence-hidden" class="hidden">
+          {% for item in analysis.medium_confidence[3:] %}
+          <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+            <span class="text-xs text-yellow-600 dark:text-yellow-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      {% if analysis.medium_confidence|length > 3 %}
+      <button onclick="toggleItems('medium-confidence')" 
+              class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-2 flex items-center">
+        <span id="medium-confidence-text">+{{ analysis.medium_confidence|length - 3 }} more items</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 ml-1" id="medium-confidence-icon"></i>
+      </button>
+      {% endif %}
+    </div>
+
+    <!-- Needs Attention -->
+    <div class="glass rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-gray-900 dark:text-white flex items-center">
+          <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+          Needs Attention
+        </h3>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ analysis.needs_attention|length }} items</span>
+      </div>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+        Items expiring soon or with low confidence predictions.
+      </p>
+      <div id="needs-attention-items">
+        {% for item in analysis.needs_attention[:3] %}
+        <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+          <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+          {% if item.days_until_expiry and item.days_until_expiry <= 3 %}
+          <span class="text-xs text-red-600 dark:text-red-400">{{ item.days_until_expiry }}d left</span>
+          {% else %}
+          <span class="text-xs text-red-600 dark:text-red-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div id="needs-attention-hidden" class="hidden">
+          {% for item in analysis.needs_attention[3:] %}
+          <div class="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 last:border-0">
+            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.name }}</span>
+            {% if item.days_until_expiry and item.days_until_expiry <= 3 %}
+            <span class="text-xs text-red-600 dark:text-red-400">{{ item.days_until_expiry }}d left</span>
+            {% else %}
+            <span class="text-xs text-red-600 dark:text-red-400">{{ '%.0f'|format(item.confidence_score * 100) }}%</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      {% if analysis.needs_attention|length > 3 %}
+      <button onclick="toggleItems('needs-attention')" 
+              class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-2 flex items-center">
+        <span id="needs-attention-text">+{{ analysis.needs_attention|length - 3 }} more items</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 ml-1" id="needs-attention-icon"></i>
+      </button>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Smart Questions -->
+  {% if questions %}
+  <div class="glass rounded-2xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+        <i data-lucide="sparkles" class="w-5 h-5 text-purple-600 dark:text-purple-400 mr-2"></i>
+        Smart Questions
+      </h2>
+      <span class="text-sm text-gray-500 dark:text-gray-400">{{ questions|length }} questions</span>
+    </div>
+    
+    <div class="space-y-6">
+      {% for question in questions %}
+      <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-6 {% if question.urgency == 'high' %}border-red-300 dark:border-red-700 bg-red-50/50 dark:bg-red-900/10{% endif %}">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <h3 class="font-medium text-gray-900 dark:text-white mb-2">
+              {{ question.question }}
+            </h3>
+            {% if question.confidence_reasons %}
+            <div class="flex flex-wrap gap-2 mb-3">
+              {% for reason in question.confidence_reasons[:2] %}
+              <span class="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                {{ reason }}
+              </span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% if question.urgency == 'high' %}
+          <div class="flex items-center text-red-600 dark:text-red-400 ml-4">
+            <i data-lucide="alert-triangle" class="w-4 h-4 mr-1"></i>
+            <span class="text-xs font-medium">Urgent</span>
+          </div>
+          {% endif %}
+        </div>
+        
+        <form method="post" class="flex items-center space-x-4">
+          <input type="hidden" name="action" value="save_item" />
+          <input type="hidden" name="item_id" value="{{ question.item_id }}" />
+          
+          <div class="flex-1 max-w-xs">
+            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Consumption per day</label>
+            <div class="relative">
+              <input type="number" step="0.001" min="0" 
+                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+                     name="per_day" value="{{ '%.3f'|format(question.suggested_answer) }}" />
+            </div>
+          </div>
+          
+          <div class="flex space-x-2">
+            <button type="submit" 
+                    class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-200">
+              <i data-lucide="check" class="w-4 h-4 mr-1"></i>
+              Apply
+            </button>
+            <button type="button" onclick="this.closest('form').querySelector('input[name=per_day]').value='{{ question.current_answer|round(3) }}'"
+                    class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+              <i data-lucide="x" class="w-4 h-4 mr-1"></i>
+              Keep Current
+            </button>
+          </div>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Learning Progress -->
+  {% if analysis %}
+  <div class="glass rounded-2xl p-6">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+      <i data-lucide="trending-up" class="w-5 h-5 text-green-600 dark:text-green-400 mr-2"></i>
+      AI Learning Progress
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+          <span class="text-2xl font-bold text-green-600 dark:text-green-400">
+            {{ analysis.high_confidence|length }}
+          </span>
+        </div>
+        <h3 class="font-medium text-gray-900 dark:text-white mb-1">Items Learned</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">AI has high confidence predictions</p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+          <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            {{ analysis.learning_opportunities|length }}
+          </span>
+        </div>
+        <h3 class="font-medium text-gray-900 dark:text-white mb-1">Learning Opportunities</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Items with usage data to improve</p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+          <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+            {{ ((analysis.high_confidence|length / (analysis.high_confidence|length + analysis.medium_confidence|length + analysis.low_confidence|length)) * 100)|round if (analysis.high_confidence|length + analysis.medium_confidence|length + analysis.low_confidence|length) > 0 else 0 }}%
+          </span>
+        </div>
+        <h3 class="font-medium text-gray-900 dark:text-white mb-1">Accuracy Score</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Overall prediction confidence</p>
+      </div>
+    </div>
+    
+    <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl">
+      <p class="text-sm text-gray-700 dark:text-gray-300">
+        <i data-lucide="lightbulb" class="w-4 h-4 inline mr-1 text-yellow-500"></i>
+        <strong>Tip:</strong> The more you use ShelfLife+, the better our AI becomes at predicting your consumption patterns and preventing food waste!
+      </p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function toggleItems(category) {
+  const hiddenDiv = document.getElementById(category + '-hidden');
+  const textSpan = document.getElementById(category + '-text');
+  const icon = document.getElementById(category + '-icon');
+  
+  if (hiddenDiv.classList.contains('hidden')) {
+    // Show hidden items
+    hiddenDiv.classList.remove('hidden');
+    textSpan.textContent = 'Show less';
+    icon.setAttribute('data-lucide', 'chevron-up');
+  } else {
+    // Hide items
+    hiddenDiv.classList.add('hidden');
+    const hiddenCount = hiddenDiv.children.length;
+    textSpan.textContent = '+' + hiddenCount + ' more items';
+    icon.setAttribute('data-lucide', 'chevron-down');
+  }
+  
+  // Refresh lucide icons
+  lucide.createIcons();
+}
+</script>
+{% endblock %}

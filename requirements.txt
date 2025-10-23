@@ -1,0 +1,11 @@
+Flask==3.0.2
+SQLAlchemy==2.0.36
+Flask-SQLAlchemy==3.1.1
+Pillow==11.0.0
+easyocr==1.7.2
+opencv-python==4.10.0.84
+transformers==4.44.2
+timm==1.0.7
+APScheduler==3.10.4
+scikit-learn==1.5.2
+rapidfuzz==3.9.6

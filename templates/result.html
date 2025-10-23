@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Review Items - ShelfLife+{% endblock %}
+
+{% block content %}
+<!-- Review Items Hero Section -->
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl mb-4">
+      <i data-lucide="check-circle" class="w-8 h-8 text-white"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Review Detected Items</h1>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+      AI has extracted {{ items|length }} items from your bill. Review and edit any details before adding to your inventory.
+    </p>
+  </div>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+        <div class="flex items-center">
+          <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2"></i>
+          <span class="text-blue-800 dark:text-blue-200">{{ messages|join(', ') }}</span>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Items Review Form -->
+  <div class="glass rounded-2xl p-6 animate-fade-in">
+    <form method="post" action="{{ url_for('confirm_bill') }}" id="review-form">
+      <!-- Action Buttons Top -->
+      <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+        <div class="flex items-center space-x-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+            <i data-lucide="edit" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2"></i>
+            Extracted Items ({{ items|length }})
+          </h2>
+          {% if items|length > 0 %}
+          <button type="button" onclick="addNewRow()" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
+            <i data-lucide="plus" class="w-4 h-4 mr-1"></i>
+            Add Item
+          </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Large Responsive Table -->
+      <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto" style="max-height: 70vh; overflow-y: auto;">
+          <table class="w-full" id="items-table">
+            <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+              <tr>
+                <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style="min-width: 300px">
+                  <div class="flex items-center">
+                    <i data-lucide="package" class="w-4 h-4 mr-2 text-blue-600"></i>
+                    Product Name
+                  </div>
+                </th>
+                <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style="min-width: 120px">
+                  <div class="flex items-center">
+                    <i data-lucide="hash" class="w-4 h-4 mr-2 text-green-600"></i>
+                    Quantity
+                  </div>
+                </th>
+                <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style="min-width: 120px">
+                  <div class="flex items-center">
+                    <i data-lucide="ruler" class="w-4 h-4 mr-2 text-purple-600"></i>
+                    Unit
+                  </div>
+                </th>
+                <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style="min-width: 120px">
+                  <div class="flex items-center">
+                    <i data-lucide="dollar-sign" class="w-4 h-4 mr-2 text-orange-600"></i>
+                    Price
+                  </div>
+                </th>
+                <th class="text-left py-4 px-6 font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700" style="min-width: 120px">
+                  <div class="flex items-center">
+                    <i data-lucide="settings" class="w-4 h-4 mr-2 text-gray-600"></i>
+                    Actions
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="items-tbody">
+              {% for it in items %}
+              <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors" data-row-index="{{ loop.index0 }}">
+                <td class="py-4 px-6">
+                  <input type="text" 
+                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                         name="name_{{ loop.index0 }}" 
+                         value="{{ it.name }}" 
+                         placeholder="Enter product name" 
+                         required>
+                </td>
+                <td class="py-4 px-6">
+                  <input type="number" 
+                         step="0.001" 
+                         class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                         name="qty_{{ loop.index0 }}" 
+                         value="{{ it.quantity or 0 }}" 
+                         placeholder="0.0">
+                </td>
+                <td class="py-4 px-6">
+                  <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+                          name="unit_{{ loop.index0 }}">
+                    <option value="" {{ 'selected' if not it.unit else '' }}>Select unit</option>
+                    <option value="kg" {{ 'selected' if it.unit == 'kg' else '' }}>kg</option>
+                    <option value="g" {{ 'selected' if it.unit == 'g' else '' }}>g</option>
+                    <option value="l" {{ 'selected' if it.unit == 'l' else '' }}>l</option>
+                    <option value="ml" {{ 'selected' if it.unit == 'ml' else '' }}>ml</option>
+                    <option value="pcs" {{ 'selected' if it.unit == 'pcs' else '' }}>pcs</option>
+                    <option value="pack" {{ 'selected' if it.unit == 'pack' else '' }}>pack</option>
+                  </select>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                    <input type="number" 
+                           step="0.01" 
+                           class="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+                           name="price_{{ loop.index0 }}" 
+                           value="{{ it.price or 0 }}" 
+                           placeholder="0.00">
+                  </div>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center space-x-2">
+                    <button type="button" 
+                            onclick="duplicateRow({{ loop.index0 }})" 
+                            class="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors" 
+                            title="Duplicate item">
+                      <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                    <button type="button" 
+                            onclick="deleteRow(this)" 
+                            class="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors" 
+                            title="Delete item">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+              
+              {% if not items %}
+              <tr>
+                <td colspan="5" class="py-12 text-center">
+                  <div class="flex flex-col items-center">
+                    <i data-lucide="inbox" class="w-12 h-12 text-gray-400 mb-4"></i>
+                    <p class="text-gray-500 dark:text-gray-400 mb-4">No items detected from the bill</p>
+                    <button type="button" onclick="addNewRow()" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                      Add Item Manually
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <input type="hidden" name="row_count" value="{{ items|length }}" id="row-count">
+      
+      <!-- Action Buttons Bottom -->
+      <div class="flex flex-wrap items-center justify-between mt-6 gap-4">
+        <div class="flex items-center space-x-4">
+          <a href="{{ url_for('upload_bill') }}" class="inline-flex items-center px-4 py-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
+            <i data-lucide="upload" class="w-4 h-4 mr-2"></i>
+            Upload Another Bill
+          </a>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <a href="{{ url_for('dashboard') }}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <i data-lucide="x" class="w-4 h-4 mr-2"></i>
+            Cancel
+          </a>
+          <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+            Save {{ items|length }} Items
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+let rowCount = {{ items|length }};
+
+// Add new empty row
+function addNewRow() {
+  const tbody = document.getElementById('items-tbody');
+  const newRow = document.createElement('tr');
+  newRow.className = 'border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors';
+  newRow.setAttribute('data-row-index', rowCount);
+  
+  newRow.innerHTML = `
+    <td class="py-4 px-6">
+      <input type="text" 
+             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+             name="name_${rowCount}" 
+             placeholder="Enter product name" 
+             required>
+    </td>
+    <td class="py-4 px-6">
+      <input type="number" 
+             step="0.001" 
+             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+             name="qty_${rowCount}" 
+             placeholder="0.0">
+    </td>
+    <td class="py-4 px-6">
+      <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+              name="unit_${rowCount}">
+        <option value="">Select unit</option>
+        <option value="kg">kg</option>
+        <option value="g">g</option>
+        <option value="l">l</option>
+        <option value="ml">ml</option>
+        <option value="pcs">pcs</option>
+        <option value="pack">pack</option>
+      </select>
+    </td>
+    <td class="py-4 px-6">
+      <div class="relative">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+        <input type="number" 
+               step="0.01" 
+               class="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+               name="price_${rowCount}" 
+               placeholder="0.00">
+      </div>
+    </td>
+    <td class="py-4 px-6">
+      <div class="flex items-center space-x-2">
+        <button type="button" 
+                onclick="duplicateRow(${rowCount})" 
+                class="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors" 
+                title="Duplicate item">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+        </button>
+        <button type="button" 
+                onclick="deleteRow(this)" 
+                class="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors" 
+                title="Delete item">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </td>
+  `;
+  
+  tbody.appendChild(newRow);
+  rowCount++;
+  updateRowCount();
+  lucide.createIcons();
+  
+  // Focus on the new product name input
+  newRow.querySelector('input[type="text"]').focus();
+}
+
+// Delete row
+function deleteRow(button) {
+  const row = button.closest('tr');
+  if (row) {
+    row.remove();
+    updateRowCount();
+    updateSaveButton();
+  }
+}
+
+// Update row count
+function updateRowCount() {
+  const actualRows = document.querySelectorAll('#items-tbody tr').length;
+  document.getElementById('row-count').value = actualRows;
+}
+
+// Update save button text
+function updateSaveButton() {
+  const actualRows = document.querySelectorAll('#items-tbody tr').length;
+  const saveButton = document.querySelector('button[type="submit"]');
+  if (saveButton) {
+    saveButton.innerHTML = `
+      <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+      Save ${actualRows} Items
+    `;
+    lucide.createIcons();
+  }
+}
+</script>
+{% endblock %}

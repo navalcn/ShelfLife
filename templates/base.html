@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ShelfLife+{% endblock %}</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a'
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out',
+            'slide-up': 'slideUp 0.3s ease-out',
+            'pulse-soft': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .dark .glass {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Custom Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.5);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.7);
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.6);
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen transition-all duration-300">
+  
+  <!-- Navigation -->
+  <nav class="glass sticky top-0 z-50 border-b border-white/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-8">
+          <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white">
+            <i data-lucide="refrigerator" class="w-6 h-6 text-primary-600"></i>
+            <span>ShelfLife+</span>
+          </a>
+          <div class="hidden md:flex space-x-6">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              Dashboard
+            </a>
+            <a href="{{ url_for('upload_bill') }}" class="nav-link">
+              <i data-lucide="camera" class="w-4 h-4"></i>
+              Upload Bill
+            </a>
+            <a href="{{ url_for('daily_usage') }}" class="nav-link">
+              <i data-lucide="utensils" class="w-4 h-4"></i>
+              Daily Usage
+            </a>
+            <a href="{{ url_for('survey') }}" class="nav-link">
+              <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+              Survey
+            </a>
+            <a href="{{ url_for('shopping_list') }}" class="nav-link">
+              <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+              Shopping List
+            </a>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <!-- Notifications Bell -->
+          <div class="relative">
+            <button id="notif-bell" class="relative p-2 rounded-full hover:bg-white/10 transition-colors">
+              <i data-lucide="bell" class="w-5 h-5 text-gray-700 dark:text-gray-300"></i>
+              {% if notifications and (notifications.expiring_soon|length + notifications.low_stock|length) > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {{ notifications.expiring_soon|length + notifications.low_stock|length }}
+                </span>
+              {% endif %}
+            </button>
+            
+            <!-- Enhanced Notifications Dropdown -->
+            <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-96 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 z-50 max-h-96 overflow-hidden">
+              <!-- Header -->
+              <div class="p-4 border-b border-gray-200/30 dark:border-gray-700/30">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ notifications.generated_at or 'Just now' }}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Scrollable Content -->
+              <div class="max-h-80 overflow-y-auto">
+                <!-- Expiring Soon Section -->
+                <div class="p-4 border-b border-gray-200/30 dark:border-gray-700/30">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-medium text-gray-900 dark:text-white flex items-center">
+                      <div class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
+                      Expiring Soon
+                    </h4>
+                    <span class="text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-1 rounded-full">
+                      {{ notifications.expiring_soon|length if notifications else 0 }}
+                    </span>
+                  </div>
+                  
+                  {% if notifications and notifications.expiring_soon %}
+                    <div class="space-y-2">
+                      {% for n in notifications.expiring_soon[:5] %}
+                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer notif-item" data-item-id="{{ n.id }}">
+                          <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                              <i data-lucide="clock" class="w-4 h-4 text-red-600 dark:text-red-400"></i>
+                            </div>
+                            <div>
+                              <p class="text-sm font-medium text-gray-900 dark:text-white">{{ n.name }}</p>
+                              <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {% if n.expiry_date %}Expires {{ n.expiry_date }}{% else %}Check expiry{% endif %}
+                              </p>
+                            </div>
+                          </div>
+                          <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                      {% endfor %}
+                      {% if notifications.expiring_soon|length > 5 %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 text-center py-2">
+                          +{{ notifications.expiring_soon|length - 5 }} more items
+                        </p>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="flex items-center justify-center py-4">
+                      <div class="text-center">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">All items fresh!</p>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+                
+                <!-- Low Stock Section -->
+                <div class="p-4">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-medium text-gray-900 dark:text-white flex items-center">
+                      <div class="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+                      Low Stock
+                    </h4>
+                    <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-2 py-1 rounded-full">
+                      {{ notifications.low_stock|length if notifications else 0 }}
+                    </span>
+                  </div>
+                  
+                  {% if notifications and notifications.low_stock %}
+                    {% set low_sorted = notifications.low_stock|sort(attribute='finish_pred') %}
+                    <div class="space-y-2">
+                      {% for n in low_sorted[:5] %}
+                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer notif-item" data-item-id="{{ n.id }}">
+                          <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                              <i data-lucide="package" class="w-4 h-4 text-orange-600 dark:text-orange-400"></i>
+                            </div>
+                            <div>
+                              <p class="text-sm font-medium text-gray-900 dark:text-white">{{ n.name }}</p>
+                              <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {% if n.finish_pred %}Runs out {{ n.finish_pred }}{% else %}Low quantity{% endif %}
+                              </p>
+                            </div>
+                          </div>
+                          <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                      {% endfor %}
+                      {% if notifications.low_stock|length > 5 %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 text-center py-2">
+                          +{{ notifications.low_stock|length - 5 }} more items
+                        </p>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="flex items-center justify-center py-4">
+                      <div class="text-center">
+                        <i data-lucide="package-check" class="w-8 h-8 text-green-500 mx-auto mb-2"></i>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Stock levels good!</p>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <!-- Footer Actions -->
+              {% if notifications and (notifications.expiring_soon or notifications.low_stock) %}
+              <div class="p-3 border-t border-gray-200/30 dark:border-gray-700/30 bg-gray-50/50 dark:bg-gray-900/50">
+                <button onclick="markAllNotificationsRead()" class="w-full text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <i data-lucide="check" class="w-3 h-3 inline mr-1"></i>
+                  Mark all as seen
+                </button>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 transition-colors">
+            <i data-lucide="sun" class="w-5 h-5 text-gray-700 dark:text-gray-300 dark:hidden"></i>
+            <i data-lucide="moon" class="w-5 h-5 text-gray-700 dark:text-gray-300 hidden dark:block"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div id="flash-messages" class="mb-6">
+          {% for message in messages %}
+            <div class="bg-green-100 dark:bg-green-900/20 border border-green-400 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg mb-2 animate-slide-up">
+              <div class="flex items-center">
+                <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i>
+                {{ message }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.classList.toggle('dark', savedTheme === 'dark');
+    html.setAttribute('data-theme', savedTheme);
+    
+    themeToggle?.addEventListener('click', () => {
+      const isDark = html.classList.contains('dark');
+      html.classList.toggle('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+    
+    // Notifications dropdown
+    const notifBell = document.getElementById('notif-bell');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    
+    notifBell?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notifDropdown?.classList.toggle('hidden');
+    });
+    
+    document.addEventListener('click', () => {
+      notifDropdown?.classList.add('hidden');
+    });
+    
+    notifDropdown?.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    
+    // Enhanced notification item clicks
+    document.querySelectorAll('.notif-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const itemId = item.getAttribute('data-item-id');
+        if (itemId) {
+          const target = document.querySelector(`#item-${itemId}`);
+          if (target) {
+            notifDropdown?.classList.add('hidden');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Highlight the target item
+            target.classList.add('ring-2', 'ring-blue-500', 'ring-opacity-50', 'bg-blue-50', 'dark:bg-blue-900/20');
+            setTimeout(() => {
+              target.classList.remove('ring-2', 'ring-blue-500', 'ring-opacity-50', 'bg-blue-50', 'dark:bg-blue-900/20');
+            }, 3000);
+            
+            // Mark notification as seen
+            markNotificationSeen(itemId);
+          }
+        }
+      });
+    });
+    
+    // Mark all notifications as read
+    function markAllNotificationsRead() {
+      localStorage.setItem('lastNotificationCheck', Date.now().toString());
+      notifDropdown?.classList.add('hidden');
+      
+      // Show toast
+      showToast('All notifications marked as seen', 'success');
+    }
+    
+    // Mark single notification as seen
+    function markNotificationSeen(itemId) {
+      const seenNotifications = JSON.parse(localStorage.getItem('seenNotifications') || '[]');
+      if (!seenNotifications.includes(itemId)) {
+        seenNotifications.push(itemId);
+        localStorage.setItem('seenNotifications', JSON.stringify(seenNotifications));
+      }
+    }
+    
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg transform translate-y-full transition-transform duration-300 ${
+        type === 'success' ? 'bg-green-500 text-white' : 
+        type === 'error' ? 'bg-red-500 text-white' : 
+        'bg-blue-500 text-white'
+      }`;
+      toast.innerHTML = `
+        <div class="flex items-center">
+          <i data-lucide="${type === 'success' ? 'check' : type === 'error' ? 'x' : 'info'}" class="w-4 h-4 mr-2"></i>
+          ${message}
+        </div>
+      `;
+      
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      
+      // Animate in
+      setTimeout(() => toast.classList.remove('translate-y-full'), 100);
+      
+      // Animate out and remove
+      setTimeout(() => {
+        toast.classList.add('translate-y-full');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+    
+    // Auto-hide flash messages
+    setTimeout(() => {
+      const flashMessages = document.getElementById('flash-messages');
+      if (flashMessages) {
+        flashMessages.style.opacity = '0';
+        flashMessages.style.transform = 'translateY(-10px)';
+        setTimeout(() => flashMessages.remove(), 300);
+      }
+    }, 5000);
+  </script>
+  
+  <style>
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgb(55 65 81);
+      transition: all 0.2s;
+    }
+    .dark .nav-link {
+      color: rgb(209 213 219);
+    }
+    .nav-link:hover {
+      color: rgb(37 99 235);
+      background-color: rgba(255, 255, 255, 0.1);
+      text-decoration: none;
+    }
+    .dark .nav-link:hover {
+      color: rgb(96 165 250);
+    }
+    .nav-link.active {
+      color: rgb(37 99 235);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .dark .nav-link.active {
+      color: rgb(96 165 250);
+    }
+  </style>
+</body>
+</html>
