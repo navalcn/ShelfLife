@@ -1017,6 +1017,29 @@ def create_app():
     @app.route('/favicon.ico')
     def favicon():
         return app.send_static_file('favicon.svg')
+    
+    @app.route('/api/predict-expiry', methods=['POST'])
+    def api_predict_expiry():
+        """API endpoint to predict expiry date for an item name."""
+        data = request.get_json()
+        item_name = data.get('name', '').strip()
+        
+        if not item_name:
+            return {'expiry_date': None, 'days': None}
+        
+        # Try smart categorization
+        category, confidence = categorize_item(item_name)
+        predicted_days = predict_expiry_days(category, item_name)
+        
+        if not predicted_days:
+            # Fallback to default shelf life
+            predicted_days = get_default_shelf_life_days(item_name)
+        
+        if predicted_days:
+            expiry_date = (datetime.now(timezone.utc).date() + timedelta(days=predicted_days)).isoformat()
+            return {'expiry_date': expiry_date, 'days': predicted_days, 'category': category}
+        
+        return {'expiry_date': None, 'days': None}
 
     return app
 
