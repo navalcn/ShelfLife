@@ -1,67 +1,67 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Nutrition Tracker{% endblock %}
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-8">Nutrition Tracker</h1>
+  <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Nutrition Tracker</h1>
   
   {% if today_totals.meal_count > 0 %}
   <div class="glass rounded-xl p-6 mb-8">
-    <h2 class="text-xl font-semibold mb-4">Today's Nutrition</h2>
+    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Today's Nutrition</h2>
     <div class="grid grid-cols-5 gap-4 mb-6">
-      <div class="bg-orange-100 dark:bg-orange-900/20 rounded-lg p-4">
-        <div class="text-sm mb-1">Calories</div>
-        <div class="text-3xl font-bold">{{ today_totals.calories }}</div>
+      <div class="bg-orange-100 dark:bg-orange-900/20 rounded-lg p-4 border-2 border-orange-200 dark:border-orange-700">
+        <div class="text-sm mb-1 text-orange-600 dark:text-orange-400">Calories</div>
+        <div class="text-3xl font-bold text-orange-700 dark:text-orange-300">{{ today_totals.calories }}</div>
       </div>
-      <div class="bg-red-100 dark:bg-red-900/20 rounded-lg p-4">
-        <div class="text-sm mb-1">Protein</div>
-        <div class="text-3xl font-bold">{{ "%.1f"|format(today_totals.protein_g) }}g</div>
+      <div class="bg-red-100 dark:bg-red-900/20 rounded-lg p-4 border-2 border-red-200 dark:border-red-700">
+        <div class="text-sm mb-1 text-red-600 dark:text-red-400">Protein</div>
+        <div class="text-3xl font-bold text-red-700 dark:text-red-300">{{ "%.1f"|format(today_totals.protein_g) }}g</div>
       </div>
-      <div class="bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-4">
-        <div class="text-sm mb-1">Carbs</div>
-        <div class="text-3xl font-bold">{{ "%.1f"|format(today_totals.carbs_g) }}g</div>
+      <div class="bg-yellow-100 dark:bg-yellow-900/20 rounded-lg p-4 border-2 border-yellow-200 dark:border-yellow-700">
+        <div class="text-sm mb-1 text-yellow-600 dark:text-yellow-400">Carbs</div>
+        <div class="text-3xl font-bold text-yellow-700 dark:text-yellow-300">{{ "%.1f"|format(today_totals.carbs_g) }}g</div>
       </div>
-      <div class="bg-purple-100 dark:bg-purple-900/20 rounded-lg p-4">
-        <div class="text-sm mb-1">Fat</div>
-        <div class="text-3xl font-bold">{{ "%.1f"|format(today_totals.fat_g) }}g</div>
+      <div class="bg-purple-100 dark:bg-purple-900/20 rounded-lg p-4 border-2 border-purple-200 dark:border-purple-700">
+        <div class="text-sm mb-1 text-purple-600 dark:text-purple-400">Fat</div>
+        <div class="text-3xl font-bold text-purple-700 dark:text-purple-300">{{ "%.1f"|format(today_totals.fat_g) }}g</div>
       </div>
-      <div class="bg-green-100 dark:bg-green-900/20 rounded-lg p-4">
-        <div class="text-sm mb-1">Fiber</div>
-        <div class="text-3xl font-bold">{{ "%.1f"|format(today_totals.fiber_g) }}g</div>
+      <div class="bg-green-100 dark:bg-green-900/20 rounded-lg p-4 border-2 border-green-200 dark:border-green-700">
+        <div class="text-sm mb-1 text-green-600 dark:text-green-400">Fiber</div>
+        <div class="text-3xl font-bold text-green-700 dark:text-green-300">{{ "%.1f"|format(today_totals.fiber_g) }}g</div>
       </div>
     </div>
     
     {% if insights %}
-    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-4">
-      <h3 class="font-semibold mb-2">Insights</h3>
-      <ul>{% for insight in insights %}<li>{{ insight }}</li>{% endfor %}</ul>
+    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-4 border-2 border-blue-200 dark:border-blue-700">
+      <h3 class="font-semibold mb-2 text-blue-900 dark:text-blue-200">Insights</h3>
+      <ul class="text-blue-800 dark:text-blue-300">{% for insight in insights %}<li>{{ insight }}</li>{% endfor %}</ul>
     </div>
     {% endif %}
     
-    <h3 class="font-semibold mb-3">Today's Meals</h3>
+    <h3 class="font-semibold mb-3 text-gray-900 dark:text-white">Today's Meals</h3>
     {% for meal in today_meals %}
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-3 mb-2">
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-3 mb-2 border border-gray-200 dark:border-gray-700">
       <div class="flex justify-between">
-        <div><strong>{{ meal.recipe_title }}</strong><br><small>{{ meal.cooked_at.strftime('%I:%M %p') }}</small></div>
-        <div class="text-right"><strong>{{ meal.calories }} cal</strong><br><small>P:{{ "%.1f"|format(meal.protein_g) }}g C:{{ "%.1f"|format(meal.carbs_g) }}g F:{{ "%.1f"|format(meal.fat_g) }}g</small></div>
+        <div><strong class="text-gray-900 dark:text-white">{{ meal.recipe_title }}</strong><br><small class="text-gray-500 dark:text-gray-400">{{ meal.cooked_at.strftime('%I:%M %p') }}</small></div>
+        <div class="text-right"><strong class="text-orange-600 dark:text-orange-400">{{ meal.calories }} cal</strong><br><small class="text-gray-600 dark:text-gray-400">P:{{ "%.1f"|format(meal.protein_g) }}g C:{{ "%.1f"|format(meal.carbs_g) }}g F:{{ "%.1f"|format(meal.fat_g) }}g</small></div>
       </div>
     </div>
     {% endfor %}
   </div>
   {% else %}
   <div class="glass rounded-xl p-6 text-center">
-    <p class="text-gray-600 mb-2">No meals tracked today</p>
-    <p class="text-sm">Cook a recipe to start tracking!</p>
+    <p class="text-gray-600 dark:text-gray-400 mb-2">No meals tracked today</p>
+    <p class="text-sm text-gray-500 dark:text-gray-500">Cook a recipe to start tracking!</p>
   </div>
   {% endif %}
   
   {% if recent_meals %}
   <div class="glass rounded-xl p-6">
-    <h2 class="text-xl font-semibold mb-4">Recent Meals</h2>
+    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Recent Meals</h2>
     <table class="w-full">
-      <thead><tr><th class="text-left py-2">Date</th><th class="text-left py-2">Meal</th><th class="text-right py-2">Calories</th><th class="text-right py-2">Protein</th></tr></thead>
+      <thead><tr><th class="text-left py-2 text-gray-700 dark:text-gray-300">Date</th><th class="text-left py-2 text-gray-700 dark:text-gray-300">Meal</th><th class="text-right py-2 text-gray-700 dark:text-gray-300">Calories</th><th class="text-right py-2 text-gray-700 dark:text-gray-300">Protein</th></tr></thead>
       <tbody>
       {% for meal in recent_meals %}
-      <tr class="border-t"><td class="py-2">{{ meal.cooked_at.strftime('%b %d') }}</td><td class="py-2">{{ meal.recipe_title }}</td><td class="text-right py-2">{{ meal.calories }}</td><td class="text-right py-2">{{ "%.1f"|format(meal.protein_g) }}g</td></tr>
+      <tr class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50"><td class="py-2 text-gray-600 dark:text-gray-400">{{ meal.cooked_at.strftime('%b %d') }}</td><td class="py-2 text-gray-900 dark:text-white">{{ meal.recipe_title }}</td><td class="text-right py-2 text-orange-600 dark:text-orange-400 font-semibold">{{ meal.calories }}</td><td class="text-right py-2 text-gray-700 dark:text-gray-300">{{ "%.1f"|format(meal.protein_g) }}g</td></tr>
       {% endfor %}
       </tbody>
     </table>
