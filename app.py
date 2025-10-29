@@ -466,13 +466,35 @@ def create_app():
                                         pass
                                     break
                     
-                    # Save cooking history
+                    # Calculate nutrition for the recipe
+                    nutrition_data = None
+                    try:
+                        from utils.nutrition_calculator import calculate_recipe_nutrition
+                        # Get recipe ingredients for nutrition calculation
+                        recipe_ingredients = []
+                        for score, r, match_info in scored:
+                            if r.get('title') == title:
+                                recipe_ingredients = r.get('ingredients', [])
+                                break
+                        
+                        if recipe_ingredients:
+                            nutrition_result = calculate_recipe_nutrition(recipe_ingredients)
+                            nutrition_data = nutrition_result['total']
+                    except Exception as e:
+                        print(f"Error calculating nutrition: {e}")
+                    
+                    # Save cooking history with nutrition
                     try:
                         import json
                         cooked_recipe = CookedRecipe(
                             recipe_title=title,
                             ingredients_used=json.dumps(ingredients_used),
-                            total_items_used=items_used_count
+                            total_items_used=items_used_count,
+                            calories=nutrition_data['calories'] if nutrition_data else None,
+                            protein_g=nutrition_data['protein_g'] if nutrition_data else None,
+                            carbs_g=nutrition_data['carbs_g'] if nutrition_data else None,
+                            fat_g=nutrition_data['fat_g'] if nutrition_data else None,
+                            fiber_g=nutrition_data['fiber_g'] if nutrition_data else None
                         )
                         db.session.add(cooked_recipe)
                     except Exception as e:
@@ -838,6 +860,87 @@ def create_app():
                              today_summary=today_summary,
                              suggestions=suggestions,
                              recent_patterns=recent_patterns,
+                             notifications=notifications)
+    
+    @app.route('/nutrition-tracker')
+    def nutrition_tracker():
+        """Nutrition tracking and insights page."""
+        from utils.nutrition_calculator import get_nutrition_insights, compare_with_average
+        from datetime import timedelta
+        
+        # Get all cooked recipes with nutrition data
+        all_recipes = CookedRecipe.query.order_by(CookedRecipe.cooked_at.desc()).all()
+        
+        # Filter recipes with nutrition data
+        recipes_with_nutrition = [r for r in all_recipes if r.calories is not None]
+        
+        # Today's meals
+        today = datetime.now(timezone.utc).date()
+        today_meals = [r for r in recipes_with_nutrition 
+                      if r.cooked_at.date() == today]
+        
+        # Calculate today's totals
+        today_totals = {
+            'calories': sum(r.calories or 0 for r in today_meals),
+            'protein_g': sum(r.protein_g or 0 for r in today_meals),
+            'carbs_g': sum(r.carbs_g or 0 for r in today_meals),
+            'fat_g': sum(r.fat_g or 0 for r in today_meals),
+            'fiber_g': sum(r.fiber_g or 0 for r in today_meals),
+            'meal_count': len(today_meals)
+        }
+        
+        # Last 7 days data for charts
+        seven_days_ago = today - timedelta(days=6)
+        weekly_data = []
+        for i in range(7):
+            day = seven_days_ago + timedelta(days=i)
+            day_meals = [r for r in recipes_with_nutrition 
+                        if r.cooked_at.date() == day]
+            daily_total = {
+                'date': day.strftime('%b %d'),
+                'calories': sum(r.calories or 0 for r in day_meals),
+                'protein_g': sum(r.protein_g or 0 for r in day_meals),
+                'carbs_g': sum(r.carbs_g or 0 for r in day_meals),
+                'fat_g': sum(r.fat_g or 0 for r in day_meals)
+            }
+            weekly_data.append(daily_total)
+        
+        # Calculate historical average (last 30 days)
+        thirty_days_ago = today - timedelta(days=30)
+        historical_meals = [r for r in recipes_with_nutrition 
+                           if r.cooked_at.date() >= thirty_days_ago]
+        
+        historical_avg = {}
+        if historical_meals:
+            historical_avg = {
+                'calories': sum(r.calories or 0 for r in historical_meals) / len(historical_meals),
+                'protein_g': sum(r.protein_g or 0 for r in historical_meals) / len(historical_meals),
+                'carbs_g': sum(r.carbs_g or 0 for r in historical_meals) / len(historical_meals),
+                'fat_g': sum(r.fat_g or 0 for r in historical_meals) / len(historical_meals)
+            }
+        
+        # Generate insights for today
+        insights = []
+        if today_totals['calories'] > 0:
+            insights = get_nutrition_insights(today_totals)
+        
+        # Compare with average
+        comparisons = []
+        if today_totals['calories'] > 0 and historical_avg:
+            comparisons = compare_with_average(today_totals, historical_avg)
+        
+        # Recent meals (last 10)
+        recent_meals = recipes_with_nutrition[:10]
+        
+        notifications = load_notifications(app.config['UPLOAD_FOLDER'])
+        return render_template('nutrition_tracker.html',
+                             today_totals=today_totals,
+                             today_meals=today_meals,
+                             weekly_data=weekly_data,
+                             historical_avg=historical_avg,
+                             insights=insights,
+                             comparisons=comparisons,
+                             recent_meals=recent_meals,
                              notifications=notifications)
     
     @app.route('/log-usage', methods=['POST'])

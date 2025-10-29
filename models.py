@@ -43,5 +43,12 @@ class CookedRecipe(db.Model):
     ingredients_used = db.Column(db.Text, nullable=True)  # JSON string
     total_items_used = db.Column(db.Integer, default=0)
     
+    # Nutrition tracking
+    calories = db.Column(db.Integer, nullable=True)
+    protein_g = db.Column(db.Float, nullable=True)
+    carbs_g = db.Column(db.Float, nullable=True)
+    fat_g = db.Column(db.Float, nullable=True)
+    fiber_g = db.Column(db.Float, nullable=True)
+    
     def __repr__(self):
         return f'<CookedRecipe {self.id} {self.recipe_title}>'
