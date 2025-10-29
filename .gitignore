@@ -62,3 +62,15 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Documentation files (not needed in repo)
+BUG_FIXES_SUMMARY.md
+GITHUB_SETUP.md
+IMPROVEMENTS.md
+PAPER_COMPILATION_GUIDE.md
+PUSH_TO_GITHUB.md
+QUICK_IMPROVEMENTS.md
+RESEARCH_METRICS_GUIDE.md
+RESEARCH_PAPER.md
+ShelfLife_IEEE_Paper.tex
+TECHNICAL_DOCUMENTATION.md
