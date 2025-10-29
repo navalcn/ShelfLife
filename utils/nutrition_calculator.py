@@ -4,7 +4,7 @@ Nutrition Calculator - Calculate accurate nutrition from ingredients
 import json
 import os
 from typing import Dict, List, Any, Optional
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 
 
 def load_nutrition_data() -> Dict:
