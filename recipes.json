@@ -730,5 +730,142 @@
     "time_min": 40,
     "difficulty": "medium",
     "tags": ["tamil-nadu", "tangy", "rice-accompaniment"]
+  },
+  {
+    "title": "Butter Chicken",
+    "ingredients": [
+      {"name": "chicken", "qty": 0.5, "unit": "kg"},
+      {"name": "butter", "qty": 0.05, "unit": "kg"},
+      {"name": "cream", "qty": 0.1, "unit": "l"},
+      {"name": "tomato", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "ginger", "qty": 0.02, "unit": "kg"},
+      {"name": "garlic", "qty": 0.015, "unit": "kg"}
+    ],
+    "time_min": 45,
+    "difficulty": "medium",
+    "tags": ["non-veg", "north-indian", "rich", "restaurant-style"]
+  },
+  {
+    "title": "Aloo Paratha",
+    "ingredients": [
+      {"name": "wheat flour", "qty": 0.3, "unit": "kg"},
+      {"name": "potato", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.05, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "butter", "qty": 0.03, "unit": "kg"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["veg", "north-indian", "breakfast", "comfort-food"]
+  },
+  {
+    "title": "Idli Sambar",
+    "ingredients": [
+      {"name": "rice", "qty": 0.2, "unit": "kg"},
+      {"name": "urad dal", "qty": 0.1, "unit": "kg"},
+      {"name": "toor dal", "qty": 0.1, "unit": "kg"},
+      {"name": "mixed vegetables", "qty": 0.2, "unit": "kg"},
+      {"name": "tamarind", "qty": 0.02, "unit": "kg"},
+      {"name": "sambar powder", "qty": 0.015, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "south-indian", "breakfast", "healthy", "fermented"]
+  },
+  {
+    "title": "Paneer Tikka",
+    "ingredients": [
+      {"name": "paneer", "qty": 0.3, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.1, "unit": "kg"},
+      {"name": "capsicum", "qty": 0.1, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "ginger", "qty": 0.015, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["veg", "appetizer", "grilled", "party-food"]
+  },
+  {
+    "title": "Methi Thepla",
+    "ingredients": [
+      {"name": "wheat flour", "qty": 0.25, "unit": "kg"},
+      {"name": "fenugreek leaves", "qty": 0.1, "unit": "kg"},
+      {"name": "yogurt", "qty": 0.05, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 30,
+    "difficulty": "medium",
+    "tags": ["veg", "gujarati", "breakfast", "travel-food"]
+  },
+  {
+    "title": "Fish Curry",
+    "ingredients": [
+      {"name": "fish", "qty": 0.5, "unit": "kg"},
+      {"name": "coconut", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.2, "unit": "kg"},
+      {"name": "onion", "qty": 0.15, "unit": "kg"},
+      {"name": "tamarind", "qty": 0.015, "unit": "kg"},
+      {"name": "curry leaves", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["non-veg", "coastal", "south-indian", "protein"]
+  },
+  {
+    "title": "Vada Pav",
+    "ingredients": [
+      {"name": "potato", "qty": 0.3, "unit": "kg"},
+      {"name": "pav", "qty": 6, "unit": "pcs"},
+      {"name": "gram flour", "qty": 0.1, "unit": "kg"},
+      {"name": "onion", "qty": 0.05, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "garlic", "qty": 0.01, "unit": "kg"}
+    ],
+    "time_min": 25,
+    "difficulty": "medium",
+    "tags": ["veg", "street-food", "mumbai-style", "snack"]
+  },
+  {
+    "title": "Kheer",
+    "ingredients": [
+      {"name": "rice", "qty": 0.05, "unit": "kg"},
+      {"name": "milk", "qty": 1, "unit": "l"},
+      {"name": "sugar", "qty": 0.1, "unit": "kg"},
+      {"name": "cardamom", "qty": 0.003, "unit": "kg"},
+      {"name": "cashews", "qty": 0.02, "unit": "kg"}
+    ],
+    "time_min": 40,
+    "difficulty": "easy",
+    "tags": ["veg", "dessert", "sweet", "festive"]
+  },
+  {
+    "title": "Bhindi Masala",
+    "ingredients": [
+      {"name": "okra", "qty": 0.3, "unit": "kg"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.15, "unit": "kg"},
+      {"name": "ginger", "qty": 0.01, "unit": "kg"},
+      {"name": "oil", "qty": 0.03, "unit": "l"}
+    ],
+    "time_min": 25,
+    "difficulty": "easy",
+    "tags": ["veg", "north-indian", "dry-curry", "everyday"]
+  },
+  {
+    "title": "Misal Pav",
+    "ingredients": [
+      {"name": "moth beans", "qty": 0.15, "unit": "kg"},
+      {"name": "pav", "qty": 6, "unit": "pcs"},
+      {"name": "onion", "qty": 0.1, "unit": "kg"},
+      {"name": "tomato", "qty": 0.1, "unit": "kg"},
+      {"name": "farsan", "qty": 0.05, "unit": "kg"},
+      {"name": "oil", "qty": 0.02, "unit": "l"}
+    ],
+    "time_min": 35,
+    "difficulty": "medium",
+    "tags": ["veg", "maharashtrian", "spicy", "street-food"]
   }
 ]
