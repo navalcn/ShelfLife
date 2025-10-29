@@ -137,22 +137,6 @@ ShelfLife/
 
 ---
 
-## 🐛 Recent Bug Fixes (v1.0)
-
-✅ **10 Critical Bugs Fixed:**
-1. Recipe cooking quantity deduction error
-2. Timezone import compatibility (Python 3.10+)
-3. Meal planning crash on ingredient conflicts
-4. Item categorization over-normalization
-5. Division by zero in coverage calculation
-6. Duplicate datetime imports
-7. Analytics lazy import performance issue
-8. Models UTC import compatibility
-9. Analytics undefined variables crash
-10. Drumstick miscategorized as beverage
-
----
-
 ## 🎯 Key Technologies
 
 - **Backend**: Flask, SQLAlchemy, SQLite
@@ -228,21 +212,6 @@ The system uses `utils/item_categorizer.py` with 12 categories and 200+ keywords
 
 ---
 
-## 🚀 Future Improvements
-
-- [ ] Add comprehensive logging system
-- [ ] Add unit tests and CI/CD
-- [ ] Add waste prediction ML model
-- [ ] Add cost analytics and budget tracking
-- [ ] Add mobile app (React Native)
-- [ ] Add seasonal ingredient awareness
-- [ ] Add social sharing features
-- [ ] Add multi-user support
-- [ ] Add cloud backup
-- [ ] Add voice commands
-
----
-
 ## 📝 Notes
 
 - OCR works completely offline using Donut and EasyOCR
@@ -257,33 +226,6 @@ The system uses `utils/item_categorizer.py` with 12 categories and 200+ keywords
 ## 📄 License
 
 MIT License - Feel free to use this project for personal or commercial purposes.
-
----
-
-## 👨‍💻 Author
-
-**Naval**
-- GitHub: [@navalcn](https://github.com/navalcn)
-- Email: navalcn4002@gmail.com
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest features
-- Submit pull requests
-- Improve documentation
-
----
-
-## 📞 Support
-
-For issues or questions:
-1. Check existing GitHub issues
-2. Create a new issue with details
-3. Include error messages and steps to reproduce
 
 ---
 
