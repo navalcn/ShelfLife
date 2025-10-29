@@ -30,6 +30,10 @@ def get_default_shelf_life_days(product_name: str):
     for k, v in data.items():
         if key.startswith(k):
             return int(v)
+    # fallback: contains match (for typos like "panner" matching "paneer")
+    for k, v in data.items():
+        if k in key or key in k:
+            return int(v)
     return None
 
 
