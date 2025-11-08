@@ -648,6 +648,12 @@ def create_app():
                     is_low_time = (finish_pred - today).days <= 3
                 except Exception:
                     is_low_time = False
+            
+            # Override status if quantity is 0 or very low
+            if it.remaining_quantity is not None and it.remaining_quantity <= 0:
+                status = 'out_of_stock'
+                days_left = None
+            
             # Single-use detection: keywords OR small pack sizes by unit/quantity
             u = (it.unit or '').lower()
             qty = it.quantity if it.quantity is not None else (it.remaining_quantity or 0)

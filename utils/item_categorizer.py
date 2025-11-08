@@ -267,12 +267,50 @@ class ItemCategorizer:
     
     def predict_expiry_days(self, category: str, item_name: str = '') -> Optional[int]:
         """Predict expiry days based on category and item name."""
+        # Item-specific expiry overrides
+        item_lower = item_name.lower()
+        
+        item_specific_days = {
+            'milk': 5,
+            'egg': 14,
+            'eggs': 14,
+            'jaggery': 365,
+            'jaggeri': 365,
+            'gud': 365,
+            'paneer': 5,
+            'panner': 5,
+            'butter': 30,
+            'yogurt': 7,
+            'yoghurt': 7,
+            'curd': 7,
+            'chicken': 2,
+            'fish': 2,
+            'mutton': 2,
+            'beef': 2,
+            'bread': 4,
+            'tomato': 5,
+            'potato': 20,
+            'onion': 14,
+            'banana': 3,
+            'apple': 10,
+            'spinach': 3,
+            'ginger': 21,
+            'chilli': 7,
+            'chili': 7,
+            'green chilli': 7,
+            'red chilli': 7
+        }
+        
+        # Check for exact item match first
+        for item_key, days in item_specific_days.items():
+            if item_key in item_lower:
+                return days
+        
+        # Fall back to category-based prediction
         if category in self.default_expiry_days:
             base_days = self.default_expiry_days[category]
             
             # Adjust based on specific item characteristics
-            item_lower = item_name.lower()
-            
             # Canned/packaged items last longer
             if any(word in item_lower for word in ['canned', 'packaged', 'dried', 'powder']):
                 return base_days * 2

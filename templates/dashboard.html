@@ -366,7 +366,12 @@
               <span class="text-sm text-gray-900 dark:text-white font-medium">{{ it.remaining_quantity or 0 }} {{ it.unit or '' }}</span>
             </td>
             <td class="py-3 px-3">
-              {% if row.status == 'expired' %}
+              {% if row.status == 'out_of_stock' %}
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                  <i data-lucide="package-x" class="w-3 h-3 mr-1"></i>
+                  Low
+                </span>
+              {% elif row.status == 'expired' %}
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
                   <i data-lucide="x-circle" class="w-3 h-3 mr-1"></i>
                   Expired

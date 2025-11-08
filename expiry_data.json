@@ -1,5 +1,5 @@
 {
-  "milk": 2,
+  "milk": 5,
   "tomato": 5,
   "cheese": 10,
   "paneer": 5,
@@ -10,6 +10,8 @@
   "yogurt": 7,
   "chicken": 2,
   "fish": 2,
+  "egg": 14,
+  "eggs": 14,
   "apple": 10,
   "potato": 20,
   "onion": 14,
@@ -19,5 +21,8 @@
   "chilli": 7,
   "chili": 7,
   "green chilli": 7,
-  "red chilli": 7
+  "red chilli": 7,
+  "jaggery": 365,
+  "jaggeri": 365,
+  "gud": 365
 }
