@@ -31,12 +31,14 @@ class ItemCategorizer:
                     'tomato', 'onion', 'potato', 'carrot', 'cabbage', 'spinach', 'lettuce',
                     'broccoli', 'cauliflower', 'cucumber', 'bell pepper', 'capsicum',
                     'eggplant', 'brinjal', 'okra', 'peas', 'beans', 'corn', 'beetroot',
-                    'radish', 'turnip', 'ginger', 'garlic', 'chilli', 'pepper', 'mushroom',
-                    'celery', 'asparagus', 'zucchini', 'squash', 'pumpkin', 'sweet potato', 'drumstick'
+                    'radish', 'turnip', 'ginger', 'garlic', 'chilli', 'chili', 'green chilli',
+                    'red chilli', 'pepper', 'mushroom', 'celery', 'asparagus', 'zucchini',
+                    'squash', 'pumpkin', 'sweet potato', 'drumstick'
                 ],
                 'patterns': [
                     r'\b(vegetable|vegetables|veggie|veggies)\b',
                     r'\b\w+root\b',  # beetroot, etc.
+                    r'\bchil+i\b',  # chilli, chili variations
                 ],
                 'icon': 'carrot',
                 'color': 'green'
@@ -67,9 +69,22 @@ class ItemCategorizer:
                 'icon': 'fish',
                 'color': 'pink'
             },
+            'bakery': {
+                'keywords': [
+                    'bread', 'bun', 'pav', 'baguette', 'croissant', 'bagel', 'roll',
+                    'toast', 'loaf', 'sandwich bread', 'white bread', 'brown bread',
+                    'whole wheat bread', 'multigrain bread', 'roti', 'chapati', 'naan',
+                    'paratha', 'kulcha', 'bhatura'
+                ],
+                'patterns': [
+                    r'\b(bread|bun|pav|roti|chapati)\b',
+                ],
+                'icon': 'bread',
+                'color': 'amber'
+            },
             'grains_cereals': {
                 'keywords': [
-                    'rice', 'wheat', 'flour', 'atta', 'maida', 'bread', 'pasta', 'noodles',
+                    'rice', 'wheat', 'flour', 'atta', 'maida', 'pasta', 'noodles',
                     'oats', 'quinoa', 'barley', 'millet', 'ragi', 'jowar', 'bajra',
                     'cereal', 'cornflakes', 'muesli', 'granola', 'biscuit', 'cookie',
                     'cracker', 'rusk'
@@ -178,6 +193,7 @@ class ItemCategorizer:
             'vegetables': 5,
             'dairy': 7,
             'meat_fish': 3,
+            'bakery': 4,
             'grains_cereals': 365,
             'legumes': 730,
             'spices_condiments': 730,
